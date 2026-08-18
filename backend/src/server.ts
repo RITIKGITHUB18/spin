@@ -1,17 +1,19 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-import { createApp } from './app';
-import { connectDB } from './config/db';
+import { createApp } from "./app";
+import { connectDB } from "./config/db";
 
 async function main(): Promise<void> {
   await connectDB();
   const app = createApp();
   const port = Number(process.env.PORT) || 4000;
-  app.listen(port, () => console.log(`[server] Spin API listening on http://localhost:${port}`));
+  app.listen(port, "0.0.0.0", () =>
+    console.log(`[server] Spin API listening on ${port}`),
+  );
 }
 
 main().catch((err) => {
-  console.error('[server] Fatal startup error:', err);
+  console.error("[server] Fatal startup error:", err);
   process.exit(1);
 });
