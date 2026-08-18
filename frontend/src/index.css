@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Georgia", serif;
+  --font-body: system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+
+  /* monochrome neutral scale — white is the base surface */
+  --color-cream-0: #ffffff;
+  --color-cream-50: #ffffff;
+  --color-cream-100: #f6f6f6;
+  --color-cream-150: #ebebeb;
+  --color-cream-200: #dcdcdc;
+  --color-cream-300: #bdbdbd;
+  --color-cream-400: #949494;
+  --color-cream-500: #6b6b6b;
+  --color-cream-600: #545454;
+  --color-cream-700: #3a3a3a;
+  --color-cream-800: #212121;
+  --color-cream-900: #0b0b0b;
+
+  /* brand scale — black on white */
+  --color-brand-50: #f6f6f6;
+  --color-brand-100: #ebebeb;
+  --color-brand-lt: #f0f0f0;
+  --color-brand-300: #b0b0b0;
+  --color-brand-500: #171717;
+  --color-brand-600: #000000;
+  --color-brand-700: #000000;
+  --color-brand-tx: #0b0b0b;
+
+  /* Status intents carry hue again. The rest of the app stays monochrome —
+     surfaces, type and the CTA — so colour appears only where it means
+     something: free / in use / needs pickup. That is the one distinction worth
+     scanning a room for, and grey shades made it read as decoration.
+     Every *-ic is a solid fill behind white text and clears 4.5:1. */
+  --color-success-bg: #ecfdf3;
+  --color-success-bd: #abefc6;
+  --color-success-ic: #067647; /* 5.14:1 with white */
+
+  --color-warn-bg: #fffaeb;
+  --color-warn-bd: #fedf89;
+  --color-warn-ic: #b54708; /* 5.93:1 with white */
+
+  --color-danger-bg: #fef3f2;
+  --color-danger-bd: #fecdca;
+  --color-danger-ic: #b42318; /* 6.05:1 with white */
+
+  --color-info-bg: #eff8ff;
+  --color-info-bd: #b2ddff;
+  --color-info-tx: #175cd3;
+
+  /* The one deliberate exception to the monochrome palette. A grey error is
+     indistinguishable from ordinary helper text, and a failed sign-in has to
+     be unmissable. #b42318 on #fef3f2 measures 7.4:1. */
+  --color-error-bg: #fef3f2;
+  --color-error-bd: #fda29b;
+  --color-error-tx: #b42318;
+}
+
+@layer base {
+  body {
+    /* overflow-x-hidden clips pages while they sit off-screen mid-transition */
+    @apply bg-cream-50 text-cream-900 antialiased m-0 overflow-x-hidden;
+    font-family: var(--font-body);
+  }
+}
+
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes drumSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Stepped, not linear: the bars are discrete, so a smooth sweep makes them
+   smear between positions instead of handing the lead from one to the next.
+   Step count must match SEGMENTS in Spinner.tsx. */
+@keyframes spinnerSpin {
+  to { transform: rotate(360deg); }
+}
+.animate-spinner {
+  animation: spinnerSpin 0.9s steps(20) infinite;
+  transform-origin: 50% 50%;
+}
+/* Deliberately still animates under reduced-motion — a frozen spinner reads as
+   a hung app. Slowed instead, which removes the strobe without losing the
+   only signal that work is in progress. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spinner { animation-duration: 2s; }
+}
+/* Flat top edge that sweeps up into a point at each end, so the bar reads as
+   curving into the screen edges. The trailing `0% 0%` from the original export
+   is dropped — every curve point is mirrored (0%/100%, 0.0423%/99.9577%, …), so
+   that stray vertex only made the left edge taller than the right. */
+.clip-nav-arc {
+  clip-path: polygon(
+    0% 4.2563%, 0.0423% 5.9637%, 0.1649% 7.5834%, 0.361% 9.0937%,
+    0.6241% 10.473%, 0.9474% 11.6995%, 1.3242% 12.7517%, 1.7481% 13.6077%,
+    2.2121% 14.246%, 2.7098% 14.6449%, 3.2345% 14.7826%,
+    96.7655% 14.7826%, 97.2901% 14.6449%, 97.7878% 14.246%, 98.2519% 13.6077%,
+    98.6757% 12.7517%, 99.0526% 11.6995%, 99.3759% 10.473%, 99.6389% 9.0937%,
+    99.8351% 7.5834%, 99.9577% 5.9637%, 100% 4.2563%,
+    100% 100%, 0% 100%
+  );
+}
+
+/* Two quick strikes then a long dark gap — a steady blink would read as a
+   rendering fault rather than weather. */
+@keyframes lightningFlash {
+  0%, 6%, 100% { opacity: 0; }
+  1.2% { opacity: 0.5; }
+  2.2% { opacity: 0.08; }
+  3.2% { opacity: 0.34; }
+  4.6% { opacity: 0; }
+}
+.animate-lightning {
+  animation: lightningFlash 7s linear infinite;
+  mix-blend-mode: screen;
+  will-change: opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-lightning { animation: none; opacity: 0; }
+}
+
+/* Drifts back and forth rather than wrapping — a blob is not a seamless tile,
+   so a looping translate would visibly pop at the seam. */
+@keyframes cloudDrift {
+  from { transform: translate3d(-9%, 0, 0); }
+  to { transform: translate3d(9%, 0, 0); }
+}
+.animate-cloud-drift {
+  animation-name: cloudDrift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-cloud-drift { animation: none; }
+}
+
+.animate-fade-up { animation: fadeUp 0.35s ease both; }
+.animate-sheet-up { animation: sheetUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-drum-spin { animation: drumSpin 4s linear infinite; }

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/shiksha360-design-system-9cf5fd86-40c2-471f-9655-58f5ba5a972c/colors_and_type.css">
+<link rel="stylesheet" href="_ds/shiksha360-design-system-9cf5fd86-40c2-471f-9655-58f5ba5a972c/erp/tokens.css">
+<link rel="stylesheet" href="_ds/shiksha360-design-system-9cf5fd86-40c2-471f-9655-58f5ba5a972c/styles.css">
+<script src="_ds/shiksha360-design-system-9cf5fd86-40c2-471f-9655-58f5ba5a972c/_ds_bundle.js"></script>
+<style>
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
+  @keyframes sheetUp { from { transform:translateY(100%) } to { transform:translateY(0) } }
+  @keyframes toastIn { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
+  @keyframes pushDown { from { opacity:0; transform:translateY(-130%) } to { opacity:1; transform:translateY(0) } }
+  @keyframes drumSpin { to { transform:rotate(360deg) } }
+  @keyframes pulseDone { 0%,100% { box-shadow:0 0 0 0 rgba(196,69,58,0.30) } 50% { box-shadow:0 0 0 7px rgba(196,69,58,0) } }
+  @keyframes popIn { from { opacity:0; transform:scale(.9) } to { opacity:1; transform:scale(1) } }
+  @keyframes floaty { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-13px) } }
+  body { display:block; }
+  .spin-scroll::-webkit-scrollbar { width:0; height:0; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:36px 20px 60px;font-family:var(--f-body)">
+  <div style="position:relative;width:412px;flex:0 0 auto">
+    <div style="background:#15110e;border-radius:46px;padding:11px;box-shadow:var(--shadow-3)">
+      <div style="position:relative;width:390px;height:812px;background:var(--n50);border-radius:36px;overflow:hidden;--brand:{{ accent }}">
+
+        <!-- status bar -->
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 7px;z-index:40;pointer-events:none">
+          <span style="font-family:var(--f-mono);font-size:13px;font-weight:600;color:{{ statusInk }}">9:41</span>
+          <span style="display:flex;align-items:center;gap:6px;color:{{ statusInk }}">
+            <span style="display:flex;align-items:flex-end;gap:2px;height:11px">
+              <i style="width:3px;height:5px;background:currentColor;border-radius:1px"></i>
+              <i style="width:3px;height:7px;background:currentColor;border-radius:1px"></i>
+              <i style="width:3px;height:9px;background:currentColor;border-radius:1px"></i>
+              <i style="width:3px;height:11px;background:currentColor;border-radius:1px"></i>
+            </span>
+            <span style="position:relative;width:22px;height:11px;border:1px solid currentColor;border-radius:3px;display:inline-block;opacity:.9">
+              <i style="position:absolute;inset:1.5px;right:6px;background:currentColor;border-radius:1px"></i>
+              <i style="position:absolute;right:-3px;top:3px;width:2px;height:5px;background:currentColor;border-radius:0 1px 1px 0"></i>
+            </span>
+          </span>
+        </div>
+
+        <!-- ============ SPLASH ============ -->
+        <sc-if value="{{ isSplash }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;inset:0;overflow:hidden;background:var(--brand);display:flex;flex-direction:column;justify-content:space-between;padding:90px 30px 40px;animation:fadeUp .45s var(--ease)">
+            <div style="position:absolute;inset:0;pointer-events:none;z-index:0">
+              <span style="position:absolute;top:-34px;right:-46px;width:200px;height:200px;border-radius:999px;border:1.5px solid rgba(255,255,255,0.14);animation:floaty 7s var(--ease) infinite"></span>
+              <span style="position:absolute;top:132px;right:34px;width:62px;height:62px;border-radius:999px;background:rgba(255,255,255,0.09);animation:floaty 5s var(--ease) infinite .4s"></span>
+              <span style="position:absolute;bottom:180px;left:-34px;width:140px;height:140px;border-radius:999px;border:1.5px solid rgba(255,255,255,0.10);animation:floaty 8s var(--ease) infinite .8s"></span>
+              <span style="position:absolute;bottom:246px;left:58px;width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,0.11);animation:floaty 6s var(--ease) infinite .2s"></span>
+              <span style="position:absolute;top:70px;left:36px;width:16px;height:16px;border-radius:999px;background:rgba(255,255,255,0.16);animation:floaty 5.5s var(--ease) infinite 1s"></span>
+            </div>
+            <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:26px">
+              <div style="width:84px;height:84px;border-radius:26px;background:rgba(255,255,255,0.14);color:#fff;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.18)">
+                <span style="display:block;animation:drumSpin 5s linear infinite">
+                  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M12 3v3.2"></path><path d="M9.3 11a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path><path d="M12.5 13.6a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path></svg>
+                </span>
+              </div>
+              <div>
+                <div class="h-disp" style="font-size:62px;line-height:.95;color:#fff;font-style:italic">spin</div>
+                <div style="font-size:17px;color:rgba(255,255,255,0.85);margin-top:10px;max-width:250px;line-height:1.4">your building's laundry room, finally drama-free.</div>
+              </div>
+            </div>
+            <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:14px">
+              <button onClick="{{ goPhone }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:18px;border-radius:18px;border:0;background:#fff;color:var(--brand-tx);font-size:16.5px;font-weight:700;cursor:pointer;font-family:var(--f-body);box-shadow:0 10px 28px rgba(0,0,0,0.22)" style-active="transform:translateY(1px);box-shadow:0 5px 16px rgba(0,0,0,0.2)">Get started<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+              <div style="display:flex;align-items:center;justify-content:center;gap:7px;font-size:12.5px;color:rgba(255,255,255,0.7)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h12v9H6z"></path><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"></path></svg>
+                secure phone-number login
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ PHONE ============ -->
+        <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:44px 0 0;display:flex;flex-direction:column;padding:8px 30px 30px;animation:fadeUp .35s var(--ease)">
+            <button onClick="{{ goSplash }}" type="button" style="width:40px;height:40px;border-radius:13px;border:1px solid var(--n200);background:var(--n0);display:flex;align-items:center;justify-content:center;color:var(--n700);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="M11 18l-6-6 6-6"></path></svg>
+            </button>
+            <div style="margin-top:26px">
+              <div class="h-disp" style="font-size:34px;color:var(--n900)">What's your number?</div>
+              <div style="font-size:14.5px;color:var(--n500);margin-top:8px;max-width:290px">We'll text a one-time code to verify it's you.</div>
+            </div>
+            <div style="margin-top:30px;display:flex;align-items:stretch;gap:10px">
+              <div style="display:flex;align-items:center;padding:0 15px;background:var(--n0);border:1.5px solid var(--n200);border-radius:14px;font-size:16px;font-weight:700;color:var(--n700)">+91</div>
+              <input value="{{ phone }}" onInput="{{ onPhone }}" inputmode="numeric" placeholder="98765 43210" style="flex:1;padding:14px 16px;background:var(--n0);border:1.5px solid var(--n200);border-radius:14px;font-size:18px;letter-spacing:0.05em;font-family:var(--f-mono);color:var(--n900);outline:none" />
+            </div>
+            <div style="flex:1"></div>
+            <button onClick="{{ submitPhone }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 20px;border-radius:16px;font-size:15.5px;font-weight:700;letter-spacing:0.01em;font-family:var(--f-body);cursor:pointer;{{ phoneVar }}">Continue<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--n400);margin-top:16px;line-height:1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:1px"><path d="M12 21s7-3.5 7-9V6l-7-3-7 3v6c0 5.5 7 9 7 9z"></path></svg>
+              Used only to sign in. Neighbours never see your number.
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ OTP ============ -->
+        <sc-if value="{{ isOtp }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:44px 0 0;display:flex;flex-direction:column;padding:8px 30px 30px;animation:fadeUp .35s var(--ease)">
+            <button onClick="{{ goPhone }}" type="button" style="width:40px;height:40px;border-radius:13px;border:1px solid var(--n200);background:var(--n0);display:flex;align-items:center;justify-content:center;color:var(--n700);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="M11 18l-6-6 6-6"></path></svg>
+            </button>
+            <div style="margin-top:26px">
+              <div class="h-disp" style="font-size:34px;color:var(--n900)">Enter the code</div>
+              <div style="font-size:14.5px;color:var(--n500);margin-top:8px">Sent to <span style="color:var(--n800);font-weight:600">{{ phoneMasked }}</span></div>
+            </div>
+            <div style="margin-top:30px;display:flex;gap:12px">
+              <sc-for list="{{ otpBoxes }}" as="b" hint-placeholder-count="4">
+                <input value="{{ b.value }}" onInput="{{ b.onInput }}" onKeyDown="{{ b.onKey }}" ref="{{ b.setRef }}" inputmode="numeric" maxlength="1" style="width:60px;height:70px;text-align:center;font-size:28px;font-weight:700;font-family:var(--f-mono);color:var(--n900);background:var(--n0);border:1.5px solid var(--n200);border-radius:16px;outline:none" />
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:12px;margin-top:18px;background:var(--i-bg);border:1px solid var(--i-bd);color:var(--i-tx);border-radius:999px;padding:7px 13px;width:fit-content">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg>
+              demo — type any 4 digits
+            </div>
+            <div style="flex:1"></div>
+            <button onClick="{{ submitOtp }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 20px;border-radius:16px;font-size:15.5px;font-weight:700;letter-spacing:0.01em;font-family:var(--f-body);cursor:pointer;{{ otpVar }}">Verify &amp; continue<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+            <button onClick="{{ resend }}" type="button" style="display:flex;align-items:center;justify-content:center;gap:7px;font-size:13.5px;color:var(--n500);background:none;border:0;margin-top:16px;cursor:pointer;font-family:var(--f-body)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v5h-5"></path></svg>
+              Resend code
+            </button>
+          </div>
+        </sc-if>
+
+        <!-- ============ DETAILS ============ -->
+        <sc-if value="{{ isName }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:44px 0 0;display:flex;flex-direction:column;padding:18px 30px 30px;animation:fadeUp .35s var(--ease)">
+            <div>
+              <div class="h-disp" style="font-size:34px;color:var(--n900)">Nice to meet you</div>
+              <div style="font-size:14.5px;color:var(--n500);margin-top:8px">Just so your washes link to the right flat.</div>
+            </div>
+            <div style="margin-top:28px;display:flex;flex-direction:column;gap:16px">
+              <label style="display:flex;flex-direction:column;gap:7px">
+                <span class="eyebrow">Full name</span>
+                <input value="{{ fullName }}" onInput="{{ onName }}" placeholder="e.g. Aanya Sharma" style="padding:14px 16px;background:var(--n0);border:1.5px solid var(--n200);border-radius:14px;font-size:15px;color:var(--n900);outline:none;font-family:var(--f-body)" />
+              </label>
+              <label style="display:flex;flex-direction:column;gap:7px">
+                <span class="eyebrow">Flat number</span>
+                <input value="{{ flat }}" onInput="{{ onFlat }}" placeholder="e.g. B-204" style="padding:14px 16px;background:var(--n0);border:1.5px solid var(--n200);border-radius:14px;font-size:15px;color:var(--n900);outline:none;font-family:var(--f-body)" />
+              </label>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--n100);border-radius:14px;color:var(--n500)">
+                <span style="font-family:var(--f-mono);font-size:14px">{{ phoneMasked }}</span>
+                <span class="badge badge-s" style="border-radius:999px">verified</span>
+              </div>
+            </div>
+            <div style="flex:1"></div>
+            <button onClick="{{ submitName }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 20px;border-radius:16px;font-size:15.5px;font-weight:700;letter-spacing:0.01em;font-family:var(--f-body);cursor:pointer;{{ nameVar }}">Create account<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--n400);margin-top:16px;line-height:1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:1px"><path d="M6 11h12v9H6z"></path><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"></path></svg>
+              Your name &amp; flat stay private — used only to ping you about your own wash.
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ APP ============ -->
+        <sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0 0 74px;overflow:hidden">
+
+            <!-- HOME -->
+            <sc-if value="{{ tabHome }}" hint-placeholder-val="{{ false }}">
+              <div class="spin-scroll" style="height:100%;overflow-y:auto;animation:fadeUp .3s var(--ease)">
+                <div style="position:relative;overflow:hidden;background:var(--brand);padding:50px 22px 44px;border-radius:0 0 28px 28px;color:#fff">
+                  <div style="position:absolute;inset:0;pointer-events:none;z-index:0">
+                    <span style="position:absolute;top:-46px;right:-30px;width:180px;height:180px;border-radius:999px;border:1.5px solid rgba(255,255,255,0.13);animation:floaty 8s var(--ease) infinite"></span>
+                    <span style="position:absolute;top:40px;right:54px;width:44px;height:44px;border-radius:999px;background:rgba(255,255,255,0.08);animation:floaty 5.5s var(--ease) infinite .5s"></span>
+                    <span style="position:absolute;bottom:-30px;right:80px;width:90px;height:90px;border-radius:999px;border:1.5px solid rgba(255,255,255,0.10);animation:floaty 6.5s var(--ease) infinite .3s"></span>
+                    <span style="position:absolute;bottom:16px;right:24px;width:18px;height:18px;border-radius:999px;background:rgba(255,255,255,0.13);animation:floaty 5s var(--ease) infinite .8s"></span>
+                  </div>
+                  <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between">
+                    <span class="h-disp" style="font-size:24px;font-style:italic;color:#fff">spin</span>
+                    <button onClick="{{ openNotif }}" type="button" style="position:relative;width:42px;height:42px;border-radius:13px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                      <sc-if value="{{ unreadShow }}" hint-placeholder-val="{{ false }}">
+                        <span style="position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--d-ic);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--brand)">{{ unread }}</span>
+                      </sc-if>
+                    </button>
+                  </div>
+                  <div style="position:relative;z-index:1;margin-top:18px;font-size:14px;color:rgba(255,255,255,0.8)">Good morning,</div>
+                  <div class="h-disp" style="position:relative;z-index:1;font-size:30px;color:#fff;line-height:1.05;margin-top:2px">{{ firstName }}</div>
+                  <div style="position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.85);margin-top:10px;background:rgba(255,255,255,0.12);border-radius:999px;padding:4px 12px">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg>
+                    {{ buildingName }} · Flat {{ flat }}
+                  </div>
+                </div>
+
+                <div style="position:relative;z-index:5;padding:0 22px;margin-top:-26px">
+                  <div style="background:var(--n0);border-radius:20px;box-shadow:var(--shadow-2);padding:16px 8px;display:flex">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                      <span style="font-family:var(--f-display);font-size:28px;color:var(--s-ic);line-height:1">{{ freeCount }}</span>
+                      <span style="font-size:11.5px;color:var(--n500);font-weight:600">free</span>
+                    </div>
+                    <div style="width:1px;background:var(--n150)"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                      <span style="font-family:var(--f-display);font-size:28px;color:var(--w-ic);line-height:1">{{ busyCount }}</span>
+                      <span style="font-size:11.5px;color:var(--n500);font-weight:600">in use</span>
+                    </div>
+                    <div style="width:1px;background:var(--n150)"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                      <span style="font-family:var(--f-display);font-size:28px;color:var(--d-ic);line-height:1">{{ doneCount }}</span>
+                      <span style="font-size:11.5px;color:var(--n500);font-weight:600">done</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="padding:24px 22px 8px">
+                  <span class="h-disp" style="font-size:20px;color:var(--n900)">Laundry room</span>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:12px;padding:0 22px 22px">
+                  <sc-for list="{{ machineCards }}" as="m" hint-placeholder-count="5">
+                    <button onClick="{{ m.onTap }}" type="button" style="width:100%;text-align:left;border-radius:20px;padding:15px;display:flex;align-items:center;gap:14px;cursor:pointer;font-family:var(--f-body);{{ m.cardStyle }}" style-active="transform:scale(.985)">
+                      <div style="width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;{{ m.iconWrap }}">
+                        <span style="display:block;{{ m.iconSpin }}">{{ m.icon }}</span>
+                      </div>
+                      <div style="flex:1;min-width:0">
+                        <div style="display:flex;align-items:center;gap:7px">
+                          <span style="font-weight:700;font-size:16px;color:var(--n900)">{{ m.name }}</span>
+                          <sc-if value="{{ m.showYours }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;font-weight:700;color:var(--brand-tx);background:var(--brand-lt);border-radius:999px;padding:2px 8px">YOU</span></sc-if>
+                        </div>
+                        <div style="font-size:12.5px;color:var(--n500);margin-top:3px">{{ m.sub }}</div>
+                      </div>
+                      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:0 0 auto">
+                        <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#fff;border-radius:999px;padding:4px 10px;{{ m.pillStyle }}">{{ m.pillIcon }}{{ m.label }}</span>
+                        <span class="{{ m.rightClass }}" style="font-size:13px;font-weight:600;color:var(--n700)">{{ m.right }}</span>
+                      </div>
+                    </button>
+                  </sc-for>
+                </div>
+
+                <sc-if value="{{ showInstall }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:0 22px 24px">
+                    <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:18px;background:var(--brand-lt);border:1px solid var(--brand-lt)">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand-tx);flex:0 0 auto"><path d="M7 2.5h10a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-17a1 1 0 0 1 1-1z"></path><path d="M11 18.5h2"></path></svg>
+                      <div style="flex:1;line-height:1.35">
+                        <div style="font-size:13.5px;font-weight:700;color:var(--brand-tx)">Add spin to your home screen</div>
+                        <div style="font-size:12px;color:var(--brand-tx);opacity:.8">Push alerts the second your wash is done.</div>
+                      </div>
+                      <button onClick="{{ dismissInstall }}" type="button" style="font-size:13px;font-weight:700;color:#fff;background:var(--brand);border:0;border-radius:999px;padding:7px 14px;cursor:pointer;font-family:var(--f-body);flex:0 0 auto">Install</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <!-- MY MACHINE -->
+            <sc-if value="{{ tabMine }}" hint-placeholder-val="{{ false }}">
+              <div class="spin-scroll" style="height:100%;overflow-y:auto;animation:fadeUp .3s var(--ease)">
+                <div style="padding:54px 22px 8px">
+                  <div class="h-disp" style="font-size:28px;color:var(--n900)">My machines</div>
+                  <sc-if value="{{ hasMineCount }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:13px;color:var(--n500);margin-top:3px">{{ mineCountLabel }}</div>
+                  </sc-if>
+                </div>
+
+                <sc-if value="{{ hasMine }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:10px 22px 22px;display:flex;flex-direction:column;gap:16px">
+                    <sc-for list="{{ mineCards }}" as="c" hint-placeholder-count="1">
+                      <div style="background:var(--n0);border-radius:24px;box-shadow:var(--shadow-1);padding:26px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">
+                        <div style="position:relative;width:172px;height:172px;border-radius:999px;background:conic-gradient(var(--brand) {{ c.pct }}%, var(--n150) 0);display:flex;align-items:center;justify-content:center;margin-bottom:6px">
+                          <div style="width:138px;height:138px;border-radius:999px;background:var(--n0);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px">
+                            <span style="display:block;color:var(--brand);{{ c.ringSpin }}">{{ c.ringIcon }}</span>
+                            <div style="font-family:var(--f-mono);font-size:30px;font-weight:700;color:var(--n900);letter-spacing:-0.02em;margin-top:2px">{{ c.big }}</div>
+                            <div style="font-size:12px;color:var(--n500)">{{ c.small }}</div>
+                          </div>
+                        </div>
+                        <div style="font-size:19px;font-weight:700;color:var(--n900)">{{ c.name }}</div>
+                        <div style="font-size:13px;color:var(--n500)">{{ c.meta }}</div>
+
+                        <sc-if value="{{ c.running }}" hint-placeholder-val="{{ false }}">
+                          <div style="width:100%;margin-top:16px;display:flex;flex-direction:column;gap:14px">
+                            <div style="text-align:left">
+                              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--n500);margin-bottom:8px">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
+                                Machine acting up? Add time so it doesn't get marked free.
+                              </div>
+                              <div style="display:flex;gap:8px">
+                                <button onClick="{{ c.add5 }}" type="button" style="flex:1;padding:11px;border-radius:13px;border:1.5px solid var(--n200);background:var(--n0);color:var(--n800);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f-body)">+5 min</button>
+                                <button onClick="{{ c.add10 }}" type="button" style="flex:1;padding:11px;border-radius:13px;border:1.5px solid var(--n200);background:var(--n0);color:var(--n800);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f-body)">+10 min</button>
+                                <button onClick="{{ c.add15 }}" type="button" style="flex:1;padding:11px;border-radius:13px;border:1.5px solid var(--n200);background:var(--n0);color:var(--n800);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f-body)">+15 min</button>
+                              </div>
+                            </div>
+                            <button onClick="{{ c.simulate }}" type="button" style="display:flex;align-items:center;justify-content:center;gap:7px;font-size:12.5px;color:var(--n500);background:var(--n50);border:1px dashed var(--n300);border-radius:14px;padding:11px;cursor:pointer;font-family:var(--f-body)">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"></path><path d="M8 7a4 4 0 1 0 8 0 4 4 0 1 0-8 0"></path></svg>
+                              Demo: a neighbour marks it done →  you get a push
+                            </button>
+                          </div>
+                        </sc-if>
+
+                        <sc-if value="{{ c.done }}" hint-placeholder-val="{{ false }}">
+                          <div style="width:100%;margin-top:16px;display:flex;flex-direction:column;gap:13px">
+                            <div class="alert alert-s" style="font-size:12.5px;justify-content:center;text-align:left;border-radius:14px">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:1px"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M8 12l2.5 2.5L16 9"></path></svg>
+                              Your laundry is ready — please collect it.
+                            </div>
+                            <button onClick="{{ c.collect }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 20px;border-radius:16px;border:0;background:linear-gradient(180deg,color-mix(in srgb,var(--brand) 90%,#fff) 0%,var(--brand) 100%);color:#fff;font-size:15.5px;font-weight:700;letter-spacing:0.01em;cursor:pointer;font-family:var(--f-body);box-shadow:0 8px 22px rgba(61,86,54,0.28),inset 0 1px 0 rgba(255,255,255,0.22)">Confirm pickup &amp; release</button>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ noMine }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:48px 30px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px">
+                    <div style="width:88px;height:88px;border-radius:26px;background:var(--brand-lt);display:flex;align-items:center;justify-content:center;color:var(--brand-tx)">
+                      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M12 3v3.2"></path><path d="M9.3 11a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path><path d="M12.5 13.6a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path></svg>
+                    </div>
+                    <div>
+                      <div style="font-size:18px;font-weight:700;color:var(--n900)">No wash on the go</div>
+                      <div style="font-size:13.5px;color:var(--n500);margin-top:4px;max-width:230px">Grab a free machine from the dashboard to get started.</div>
+                    </div>
+                    <button onClick="{{ goHome }}" type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:14px;border:0;background:var(--brand);color:#fff;font-size:14.5px;font-weight:700;cursor:pointer;font-family:var(--f-body)">Find a machine</button>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <!-- PROFILE -->
+            <sc-if value="{{ tabProfile }}" hint-placeholder-val="{{ false }}">
+              <div class="spin-scroll" style="height:100%;overflow-y:auto;animation:fadeUp .3s var(--ease)">
+                <div style="padding:54px 22px 8px">
+                  <div class="h-disp" style="font-size:28px;color:var(--n900)">Profile</div>
+                </div>
+                <div style="padding:10px 22px;display:flex;align-items:center;gap:15px">
+                  <div style="width:64px;height:64px;border-radius:999px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;font-family:var(--f-display)">{{ initials }}</div>
+                  <div>
+                    <div style="font-size:19px;font-weight:700;color:var(--n900)">{{ fullName }}</div>
+                    <div style="display:flex;align-items:center;gap:7px;margin-top:4px">
+                      <span style="font-size:11px;font-weight:700;color:var(--brand-tx);background:var(--brand-lt);border-radius:999px;padding:3px 10px">Flat {{ flat }}</span>
+                      <span style="font-size:12px;color:var(--n500)">{{ buildingName }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="padding:18px 22px 0">
+                  <div class="alert alert-l" style="align-items:flex-start;border-radius:16px">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:1px"><path d="M12 21s7-3.5 7-9V6l-7-3-7 3v6c0 5.5 7 9 7 9z"></path></svg>
+                    <div style="line-height:1.45">
+                      <div style="font-size:13.5px;font-weight:700">You're invisible to neighbours</div>
+                      <div style="font-size:12.5px;margin-top:2px;opacity:.85">They only ever see a machine's status — never your name, number, or flat.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="padding:18px 22px 0">
+                  <div style="background:var(--n0);border-radius:18px;border:1px solid var(--n150);overflow:hidden">
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 16px">
+                      <span style="display:flex;align-items:center;gap:11px;font-size:13.5px;color:var(--n600)">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2.5h10a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-17a1 1 0 0 1 1-1z"></path><path d="M11 18.5h2"></path></svg>
+                        Phone
+                      </span>
+                      <span style="font-family:var(--f-mono);font-size:13px;color:var(--n900)">{{ phoneMasked }}</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 16px">
+                      <span style="display:flex;align-items:center;gap:11px;font-size:13.5px;color:var(--n600)">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                        Push notifications
+                      </span>
+                      <button onClick="{{ toggleNotif }}" type="button" style="width:46px;height:27px;border-radius:999px;border:0;cursor:pointer;padding:3px;display:flex;background:{{ notifTrack }};justify-content:{{ notifJustify }};transition:all .2s var(--ease)">
+                        <span style="width:21px;height:21px;border-radius:999px;background:#fff;box-shadow:var(--shadow-1)"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="padding:18px 22px 24px">
+                  <button onClick="{{ logout }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:14px;border:1px solid var(--d-bd);background:var(--d-bg);color:var(--d-tx);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--f-body)">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
+                    Log out
+                  </button>
+                  <div style="text-align:center;font-size:11px;color:var(--n400);margin-top:14px;font-family:var(--f-mono)">spin v1.0 · {{ buildingName }}</div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- BOTTOM NAV -->
+          <div style="position:absolute;left:0;right:0;bottom:0;height:74px;background:rgba(247,245,239,0.94);backdrop-filter:blur(12px);border-top:1px solid var(--n150);display:flex;padding:9px 14px 14px;z-index:30">
+            <button onClick="{{ goHome }}" type="button" style="flex:1;display:flex;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;font-family:var(--f-body)">
+              <span style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 16px;border-radius:14px;color:{{ cHome }};background:{{ bgHome }}">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M10 21v-6h4v6"></path></svg>
+                <span style="font-size:10.5px;font-weight:700">Home</span>
+              </span>
+            </button>
+            <button onClick="{{ goMine }}" type="button" style="flex:1;display:flex;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;font-family:var(--f-body)">
+              <span style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 16px;border-radius:14px;color:{{ cMine }};background:{{ bgMine }};position:relative">
+                <span style="position:relative">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M12 3v3.2"></path><path d="M9.3 11a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path><path d="M12.5 13.6a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path></svg>
+                  <sc-if value="{{ mineDot }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-2px;right:-3px;width:9px;height:9px;border-radius:999px;background:var(--w-ic);border:2px solid var(--n50)"></span></sc-if>
+                </span>
+                <span style="font-size:10.5px;font-weight:700">My machine</span>
+              </span>
+            </button>
+            <button onClick="{{ goProfile }}" type="button" style="flex:1;display:flex;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;font-family:var(--f-body)">
+              <span style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 16px;border-radius:14px;color:{{ cProfile }};background:{{ bgProfile }}">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"></path><path d="M8 7a4 4 0 1 0 8 0 4 4 0 1 0-8 0"></path></svg>
+                <span style="font-size:10.5px;font-weight:700">Profile</span>
+              </span>
+            </button>
+          </div>
+        </sc-if>
+
+        <!-- ============ SHEET (booking / manage) ============ -->
+        <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(26,21,18,0.4);z-index:50;animation:fadeUp .2s var(--ease)"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;z-index:51;background:var(--n0);border-radius:26px 26px 0 0;padding:10px 24px 30px;box-shadow:var(--shadow-3);animation:sheetUp .32s var(--ease)">
+            <div style="width:44px;height:5px;border-radius:999px;background:var(--n200);margin:0 auto 18px"></div>
+
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+              <div style="width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;{{ sheetIconWrap }}">{{ sheetIcon }}</div>
+              <div style="flex:1">
+                <div style="font-size:18px;font-weight:700;color:var(--n900)">{{ sheetMachineName }}</div>
+                <div style="font-size:13px;color:var(--n500)">{{ sheetSub }}</div>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#fff;border-radius:999px;padding:5px 11px;{{ sheetPillStyle }}">{{ sheetStatusLabel }}</span>
+            </div>
+
+            <!-- BOOK -->
+            <sc-if value="{{ sheetBook }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <span class="eyebrow">Programs on this machine</span>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px">
+                  <sc-for list="{{ cycleOptions }}" as="c" hint-placeholder-count="4">
+                    <button onClick="{{ c.onPick }}" type="button" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px 14px;border-radius:14px;cursor:pointer;font-family:var(--f-body);text-align:left;{{ c.style }}">
+                      <span style="font-size:14px;font-weight:700;color:var(--n900)">{{ c.label }}</span>
+                      <span style="font-size:12px;color:var(--n500)">{{ c.desc }} · {{ c.time }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+
+                <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;background:var(--n50);border:1px solid var(--n150);border-radius:16px;padding:12px 14px">
+                  <div>
+                    <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--n500)">Duration</div>
+                    <div style="font-size:12px;color:var(--n400);margin-top:1px">fine-tune the timer</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:14px">
+                    <button onClick="{{ decCycle }}" type="button" style="width:34px;height:34px;border-radius:11px;border:1px solid var(--n200);background:var(--n0);color:var(--n700);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center">−</button>
+                    <span style="min-width:64px;text-align:center;font-family:var(--f-mono);font-size:18px;font-weight:700;color:var(--n900)">{{ cycleVal }} min</span>
+                    <button onClick="{{ incCycle }}" type="button" style="width:34px;height:34px;border-radius:11px;border:1px solid var(--n200);background:var(--n0);color:var(--n700);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>
+                  </div>
+                </div>
+
+                <button onClick="{{ startMachine }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 20px;border-radius:16px;font-size:15.5px;font-weight:700;letter-spacing:0.01em;font-family:var(--f-body);cursor:pointer;margin-top:18px;{{ pVar }}">{{ startLabel }}</button>
+                <div style="display:flex;align-items:center;justify-content:center;gap:7px;font-size:11.5px;color:var(--n400);margin-top:13px">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h12v9H6z"></path><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"></path></svg>
+                  Linked to you privately — others just see "in use".
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- MANAGE -->
+            <sc-if value="{{ sheetManage }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div class="{{ manageAlertClass }}" style="align-items:flex-start;margin-bottom:16px;border-radius:14px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:1px"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg>
+                  <div style="line-height:1.45;font-size:12.5px">{{ manageNote }}</div>
+                </div>
+
+                <sc-if value="{{ mExtend }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-bottom:14px">
+                    <span class="eyebrow">Add time (machine malfunction)</span>
+                    <div style="display:flex;gap:8px;margin-top:9px">
+                      <button onClick="{{ shAdd5 }}" type="button" style="flex:1;padding:11px;border-radius:13px;border:1.5px solid var(--n200);background:var(--n0);color:var(--n800);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f-body)">+5 min</button>
+                      <button onClick="{{ shAdd10 }}" type="button" style="flex:1;padding:11px;border-radius:13px;border:1.5px solid var(--n200);background:var(--n0);color:var(--n800);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f-body)">+10 min</button>
+                      <button onClick="{{ shAdd15 }}" type="button" style="flex:1;padding:11px;border-radius:13px;border:1.5px solid var(--n200);background:var(--n0);color:var(--n800);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f-body)">+15 min</button>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-if value="{{ mNotify }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ doNotifyCollect }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 20px;border-radius:16px;font-size:15px;font-weight:700;letter-spacing:0.01em;font-family:var(--f-body);cursor:pointer;{{ pVar }}">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                      Notify owner to collect their clothes
+                    </button>
+                  </sc-if>
+                  <sc-if value="{{ mMarkDone }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ doMarkDone }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 20px;border-radius:16px;font-size:15.5px;font-weight:700;letter-spacing:0.01em;font-family:var(--f-body);cursor:pointer;{{ pVar }}">Mark as done</button>
+                  </sc-if>
+                  <sc-if value="{{ mCollect }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ doCollect }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:15px 20px;border-radius:16px;font-size:15px;font-weight:700;letter-spacing:0.01em;font-family:var(--f-body);cursor:pointer;{{ collectVar }}">Mark collected &amp; release</button>
+                  </sc-if>
+                  <sc-if value="{{ mSimulate }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ doSimulate }}" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;font-size:12.5px;color:var(--n500);background:var(--n50);border:1px dashed var(--n300);border-radius:14px;padding:11px;cursor:pointer;font-family:var(--f-body)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"></path><path d="M8 7a4 4 0 1 0 8 0 4 4 0 1 0-8 0"></path></svg>
+                      Demo: a neighbour marks it done →  you get a push
+                    </button>
+                  </sc-if>
+                </div>
+                <button onClick="{{ closeSheet }}" type="button" style="width:100%;padding:13px;margin-top:8px;background:none;border:0;color:var(--n500);font-size:13.5px;cursor:pointer;font-family:var(--f-body)">Close</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <!-- ============ NOTIFICATIONS ============ -->
+        <sc-if value="{{ notifOpen }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeNotif }}" style="position:absolute;inset:0;background:rgba(26,21,18,0.4);z-index:50;animation:fadeUp .2s var(--ease)"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;top:130px;z-index:51;background:var(--n0);border-radius:26px 26px 0 0;box-shadow:var(--shadow-3);animation:sheetUp .32s var(--ease);display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 22px 14px;border-bottom:1px solid var(--n150)">
+              <span style="font-size:18px;font-weight:700;color:var(--n900)">Notifications</span>
+              <button onClick="{{ closeNotif }}" type="button" style="width:36px;height:36px;border-radius:12px;border:1px solid var(--n200);background:var(--n0);display:flex;align-items:center;justify-content:center;color:var(--n600);cursor:pointer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
+              </button>
+            </div>
+            <div class="spin-scroll" style="flex:1;overflow-y:auto;padding:8px 0">
+              <sc-if value="{{ hasNotifs }}" hint-placeholder-val="{{ false }}">
+                <sc-for list="{{ notifList }}" as="n" hint-placeholder-count="2">
+                  <div style="display:flex;gap:13px;padding:15px 22px;border-bottom:1px solid var(--n100)">
+                    <div style="width:42px;height:42px;border-radius:13px;background:var(--s-bg);color:var(--s-ic);display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M8 12l2.5 2.5L16 9"></path></svg>
+                    </div>
+                    <div style="flex:1;line-height:1.4">
+                      <div style="font-size:14px;font-weight:700;color:var(--n900)">{{ n.title }}</div>
+                      <div style="font-size:12.5px;color:var(--n500);margin-top:1px">{{ n.body }}</div>
+                      <div style="font-size:11px;color:var(--n400);margin-top:4px;font-family:var(--f-mono)">{{ n.ago }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{ noNotifs }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:56px 30px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+                  <div style="width:64px;height:64px;border-radius:18px;background:var(--n100);display:flex;align-items:center;justify-content:center;color:var(--n400)">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                  </div>
+                  <div style="font-size:14px;color:var(--n500)">All quiet for now.<br/>We'll buzz you the moment your wash is done.</div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ PUSH BANNER ============ -->
+        <sc-if value="{{ pushShow }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ onPush }}" style="position:absolute;top:46px;left:12px;right:12px;z-index:70;animation:pushDown .4s var(--ease);cursor:pointer">
+            <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:18px;background:rgba(255,255,255,0.86);backdrop-filter:blur(16px);box-shadow:0 12px 32px rgba(26,21,18,0.18);border:1px solid rgba(255,255,255,0.6)">
+              <div style="width:40px;height:40px;border-radius:11px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M12 3v3.2"></path><path d="M9.3 11a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path><path d="M12.5 13.6a1 1 0 1 0 2 0 1 1 0 1 0-2 0"></path></svg>
+              </div>
+              <div style="flex:1;line-height:1.35;min-width:0">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span class="h-disp" style="font-size:13px;font-style:italic;color:var(--n700)">spin</span>
+                  <span style="font-size:10px;color:var(--n400);font-family:var(--f-mono)">now</span>
+                </div>
+                <div style="font-size:13.5px;font-weight:700;color:var(--n900);margin-top:1px">{{ pushTitle }}</div>
+                <div style="font-size:12px;color:var(--n600)">{{ pushBody }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ TOAST ============ -->
+        <sc-if value="{{ toastShow }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:16px;right:16px;bottom:90px;z-index:60;animation:toastIn .3s var(--ease)">
+            <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:16px;background:var(--n900);box-shadow:var(--shadow-3)">
+              <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.12);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path><path d="M8 12l2.5 2.5L16 9"></path></svg>
+              </div>
+              <div style="flex:1;line-height:1.35">
+                <div style="font-size:13.5px;font-weight:700;color:#fff">{{ toastTitle }}</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.7)">{{ toastBody }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:900},&quot;buildingName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Maple Court&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#3D5636&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#3D5636&quot;,&quot;#1f3a5f&quot;,&quot;#7A4A00&quot;,&quot;#5A4DB5&quot;]},&quot;showInstallHint&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const now = Date.now();
+    this.otpEls = [];
+    const WASH = [{ n: 'Quick 30', m: 30, d: 'Light loads' }, { n: 'Daily', m: 45, d: 'Everyday' }, { n: 'Heavy', m: 60, d: 'Bedding' }, { n: 'Eco cottons', m: 90, d: 'Gentle' }];
+    const DRY = [{ n: 'Air dry', m: 30, d: 'No heat' }, { n: 'Low heat', m: 45, d: 'Delicates' }, { n: 'Normal', m: 60, d: 'Full load' }];
+    this.state = {
+      route: 'splash',
+      tab: 'home',
+      phone: '',
+      otp: ['', '', '', ''],
+      fullName: '',
+      flat: '',
+      machines: [
+        { id: 1, name: 'Washer 1', kind: 'wash', model: '7 kg front-load', programs: WASH, status: 'available', owner: false, startTime: null, endTime: null, cycle: null },
+        { id: 2, name: 'Washer 2', kind: 'wash', model: '8 kg front-load', programs: WASH, status: 'inuse', owner: false, startTime: now - 22 * 60000, endTime: now + 7 * 60000, cycle: 45 },
+        { id: 3, name: 'Washer 3', kind: 'wash', model: '6 kg top-load', programs: WASH, status: 'inuse', owner: false, startTime: now - 43 * 60000, endTime: now + 24000, cycle: 45 },
+        { id: 4, name: 'Washer 4', kind: 'wash', model: '7 kg front-load', programs: WASH, status: 'done', owner: false, startTime: now - 58 * 60000, endTime: now - 14 * 60000, cycle: 45 },
+        { id: 5, name: 'Dryer 1', kind: 'dry', model: 'Heat-pump dryer', programs: DRY, status: 'available', owner: false, startTime: null, endTime: null, cycle: null },
+      ],
+      now,
+      sheet: null,
+      navCycle: 45,
+      toast: null,
+      push: null,
+      notifs: [],
+      unread: 0,
+      notifOpen: false,
+      pushOn: true,
+      installDismissed: false,
+    };
+  }
+
+  componentDidMount() { this.iv = setInterval(this.tick, 1000); }
+  componentWillUnmount() { clearInterval(this.iv); if (this.toastT) clearTimeout(this.toastT); if (this.pushT) clearTimeout(this.pushT); }
+
+  tick = () => {
+    const now = Date.now();
+    let changed = false;
+    const ms = this.state.machines.map(m => {
+      if (m.status === 'inuse' && m.endTime && now >= m.endTime) { changed = true; return { ...m, status: 'done' }; }
+      return m;
+    });
+    if (changed) {
+      ms.forEach((m, i) => {
+        const prev = this.state.machines[i];
+        if (prev.status === 'inuse' && m.status === 'done' && m.owner) this.notifyOwner(m);
+      });
+      this.setState({ machines: ms, now });
+    } else {
+      this.setState({ now });
+    }
+  };
+
+  fmtRemain(ms) { if (ms < 0) ms = 0; const m = Math.floor(ms / 60000); const s = Math.floor((ms % 60000) / 1000); return m + ':' + (s < 10 ? '0' : '') + s; }
+  fmtAgo(ts) { const d = Date.now() - ts; const m = Math.floor(d / 60000); if (m < 1) return 'just now'; if (m < 60) return m + ' min ago'; const h = Math.floor(m / 60); return h + ' hr' + (h > 1 ? 's' : '') + ' ago'; }
+  icon(paths, size) {
+    return React.createElement('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: size >= 24 ? 1.5 : 1.65, strokeLinecap: 'round', strokeLinejoin: 'round', style: { display: 'block' } },
+      paths.map((d, i) => React.createElement('path', { key: i, d })));
+  }
+
+  notifyOwner(m) {
+    const title = m.name + ' is done';
+    const body = 'Your laundry has finished — please collect it.';
+    const n = { id: Date.now() + Math.random(), title, body, ts: Date.now() };
+    this.setState(s => ({ notifs: [n, ...s.notifs], unread: s.unread + 1, push: { title, body } }));
+    if (this.pushT) clearTimeout(this.pushT);
+    this.pushT = setTimeout(() => this.setState({ push: null }), 5200);
+  }
+  showToast(t, b) { this.setState({ toast: { t, b } }); if (this.toastT) clearTimeout(this.toastT); this.toastT = setTimeout(() => this.setState({ toast: null }), 4000); }
+
+  onPhone = (e) => this.setState({ phone: e.target.value.replace(/\D/g, '').slice(0, 10) });
+  setOtp = (i, e) => {
+    const v = e.target.value.replace(/\D/g, '').slice(-1);
+    const otp = this.state.otp.slice(); otp[i] = v; this.setState({ otp });
+    if (v && i < 3 && this.otpEls[i + 1]) this.otpEls[i + 1].focus();
+  };
+  otpKey = (i, e) => { if (e.key === 'Backspace' && !this.state.otp[i] && i > 0 && this.otpEls[i - 1]) this.otpEls[i - 1].focus(); };
+  resend = () => this.showToast('Code resent', 'Check your messages again.');
+
+  openSheet = (m) => {
+    const cyc = m.status === 'available' && m.programs ? m.programs[1].m : this.state.navCycle;
+    this.setState({ sheet: { type: m.status === 'available' ? 'book' : 'manage', id: m.id }, navCycle: cyc });
+  };
+  closeSheet = () => this.setState({ sheet: null });
+  pickCycle = (mins) => this.setState({ navCycle: mins });
+  incCycle = () => this.setState(s => ({ navCycle: Math.min(120, s.navCycle + 5) }));
+  decCycle = () => this.setState(s => ({ navCycle: Math.max(15, s.navCycle - 5) }));
+
+  startMachine = () => {
+    const id = this.state.sheet.id; const now = Date.now(); const cyc = this.state.navCycle;
+    this.setState(s => ({
+      machines: s.machines.map(m => m.id === id ? { ...m, status: 'inuse', owner: true, startTime: now, endTime: now + cyc * 60000, cycle: cyc } : m),
+      sheet: null, tab: 'mine',
+    }));
+    this.showToast('Cycle started', "We'll alert you when it's done.");
+  };
+
+  addTime = (id, mins) => {
+    this.setState(s => ({ machines: s.machines.map(m => m.id === id ? { ...m, endTime: (m.endTime || Date.now()) + mins * 60000, cycle: (m.cycle || 0) + mins } : m) }));
+    this.showToast('+' + mins + ' min added', "Neighbours can see it's still running.");
+  };
+
+  complete = (id, community) => {
+    const m = this.state.machines.find(x => x.id === id);
+    this.setState(s => ({ machines: s.machines.map(x => x.id === id ? { ...x, status: 'done', endTime: Date.now() } : x), sheet: null }));
+    if (m.owner) this.notifyOwner({ ...m, status: 'done' });
+    else if (community) this.showToast('Owner notified', 'They got a push that their wash is done — privately.');
+  };
+  simulateEnd = (id) => this.complete(id, true);
+
+  notifyCollect = (id) => {
+    const m = this.state.machines.find(x => x.id === id);
+    this.setState({ sheet: null });
+    if (m && m.owner) {
+      const title = m.name + ' — please collect';
+      const body = 'A neighbour is waiting. Grab your laundry when you can.';
+      const n = { id: Date.now() + Math.random(), title, body, ts: Date.now() };
+      this.setState(s => ({ notifs: [n, ...s.notifs], unread: s.unread + 1, push: { title, body } }));
+      if (this.pushT) clearTimeout(this.pushT);
+      this.pushT = setTimeout(() => this.setState({ push: null }), 5200);
+    } else {
+      this.showToast('Owner nudged', 'We asked them to collect their laundry — privately.');
+    }
+  };
+
+  release = (id) => {
+    const m = this.state.machines.find(x => x.id === id);
+    this.setState(s => ({ machines: s.machines.map(x => x.id === id ? { ...x, status: 'available', owner: false, startTime: null, endTime: null, cycle: null } : x), sheet: null }));
+    this.showToast('Machine released', m.name + ' is now free for others.');
+  };
+
+  openNotif = () => this.setState({ notifOpen: true, unread: 0, push: null });
+  closeNotif = () => this.setState({ notifOpen: false });
+  logout = () => this.setState({ route: 'splash', tab: 'home', phone: '', otp: ['', '', '', ''], fullName: '', flat: '' });
+
+  renderVals() {
+    const s = this.state;
+    const now = s.now;
+    const accent = this.props.accentColor ?? '#3D5636';
+    const buildingName = this.props.buildingName ?? 'Maple Court';
+    const showInstall = (this.props.showInstallHint ?? true) && !s.installDismissed;
+
+    const I = (p, sz) => this.icon(p, sz);
+    const P = {
+      wash: ['M5 3h14v18H5z', 'M8 6.3h.01', 'M11 6.3h.01', 'M7 14a5 5 0 1 0 10 0 5 5 0 1 0-10 0', 'M10.5 14a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0'],
+      dry: ['M5 3h14v18H5z', 'M8 6.3h.01', 'M11 6.3h.01', 'M7 14a5 5 0 1 0 10 0 5 5 0 1 0-10 0', 'M9.5 14h5', 'M10.5 16.5h3'],
+      drum: ['M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0', 'M12 3v3.2', 'M9.3 11a1 1 0 1 0 2 0 1 1 0 1 0-2 0', 'M12.5 13.6a1 1 0 1 0 2 0 1 1 0 1 0-2 0'],
+      check: ['M5 12l4 4 10-10'],
+      clock: ['M12 7.5V12l3 2'],
+      bell: ['M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9', 'M10.3 21a1.94 1.94 0 0 0 3.4 0'],
+    };
+
+    const firstName = s.fullName ? s.fullName.trim().split(/\s+/)[0] : 'there';
+    const initials = s.fullName ? s.fullName.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase() : '·';
+    const phoneMasked = s.phone ? '+91 ••••• ' + (s.phone.length >= 5 ? s.phone.slice(-5) : s.phone) : '+91 ••••• •••••';
+
+    const free = s.machines.filter(m => m.status === 'available').length;
+    const busy = s.machines.filter(m => m.status === 'inuse').length;
+    const doneN = s.machines.filter(m => m.status === 'done').length;
+
+    const PILL = {
+      available: 'background:var(--s-ic)',
+      inuse: 'background:var(--w-ic)',
+      done: 'background:var(--d-ic)',
+    };
+    const CARD = {
+      available: 'background:var(--n0);border:1px solid var(--n150)',
+      inuse: 'background:var(--w-bg);border:1px solid var(--w-bd)',
+      done: 'background:var(--d-bg);border:1px solid var(--d-bd)',
+    };
+    const ICONWRAP = {
+      available: 'background:var(--brand-lt);color:var(--brand-tx)',
+      inuse: 'background:#fff;color:var(--w-ic)',
+      done: 'background:#fff;color:var(--d-ic)',
+    };
+    const machineCards = s.machines.map(m => {
+      let sub, right, rightClass, label = m.status === 'available' ? 'Free' : m.status === 'inuse' ? 'In use' : 'Done';
+      let pIcon, useDrum = false;
+      if (m.status === 'available') { sub = m.model + ' · ready'; right = 'Tap to start'; rightClass = ''; pIcon = this.icon(P.check, 12); }
+      else if (m.status === 'inuse') { sub = 'Started ' + this.fmtAgo(m.startTime); right = this.fmtRemain(m.endTime - now) + ' left'; rightClass = 'mono'; pIcon = this.icon(['M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0', 'M12 8v4l2.5 1.5'], 12); useDrum = true; }
+      else { sub = 'Finished ' + this.fmtAgo(m.endTime); right = 'Needs pickup'; rightClass = ''; pIcon = this.icon(P.bell, 12); }
+      return {
+        id: m.id, name: m.name, sub, right, rightClass, label,
+        icon: I(useDrum ? P.drum : P[m.kind], useDrum ? 26 : 26),
+        iconSpin: useDrum ? 'animation:drumSpin 4s linear infinite' : '',
+        cardStyle: CARD[m.status], iconWrap: ICONWRAP[m.status], pillStyle: PILL[m.status], pillIcon: pIcon,
+        showYours: !!m.owner,
+        onTap: () => this.openSheet(m),
+      };
+    });
+
+    const myList = s.machines.filter(m => m.owner && m.status !== 'available');
+    const hasMine = myList.length > 0;
+    const mineCards = myList.map(m => {
+      const running = m.status === 'inuse';
+      let pct, big, small, ringSpin = '', ringIcon;
+      if (running) {
+        const total = m.endTime - m.startTime;
+        pct = Math.max(2, Math.min(100, ((now - m.startTime) / total) * 100));
+        big = this.fmtRemain(m.endTime - now); small = 'remaining';
+        ringSpin = 'animation:drumSpin 4s linear infinite'; ringIcon = I(P.drum, 26);
+      } else {
+        pct = 100; big = 'Done'; small = 'ready to collect'; ringIcon = I(P.check, 30);
+      }
+      return {
+        id: m.id, name: m.name, meta: m.cycle + ' min cycle · started ' + this.fmtAgo(m.startTime),
+        running, done: !running, pct, big, small, ringSpin, ringIcon,
+        add5: () => this.addTime(m.id, 5), add10: () => this.addTime(m.id, 10), add15: () => this.addTime(m.id, 15),
+        simulate: () => this.simulateEnd(m.id), collect: () => this.release(m.id),
+      };
+    });
+    const mineRunN = myList.filter(m => m.status === 'inuse').length;
+    const mineDoneN = myList.filter(m => m.status === 'done').length;
+    const mineCountParts = [];
+    if (mineRunN) mineCountParts.push(mineRunN + ' running');
+    if (mineDoneN) mineCountParts.push(mineDoneN + ' ready to collect');
+    const mineCountLabel = mineCountParts.join(' · ');
+
+    const sh = s.sheet;
+    let sheetOpen = !!sh, sheetBook = false, sheetManage = false;
+    let sheetMachineName = '', sheetSub = '', sheetStatusLabel = '', sheetPillStyle = PILL.available, sheetIcon = I(P.wash, 26), sheetIconWrap = ICONWRAP.available;
+    let manageNote = '', manageAlertClass = 'alert alert-i', mMarkDone = false, mCollect = false, mSimulate = false, mExtend = false, mNotify = false;
+    let cycleOptions = [], startLabel = 'Start washing';
+    if (sh) {
+      const sm = s.machines.find(x => x.id === sh.id);
+      sheetIcon = I(P[sm.kind], 26);
+      sheetMachineName = sm.name;
+      sheetIconWrap = ICONWRAP[sm.status];
+      sheetPillStyle = PILL[sm.status];
+      if (sh.type === 'book') {
+        sheetBook = true;
+        sheetStatusLabel = 'Free'; sheetSub = sm.model;
+        cycleOptions = sm.programs.map(o => ({
+          label: o.n, desc: o.d, time: o.m + ' min',
+          onPick: () => this.pickCycle(o.m),
+          style: s.navCycle === o.m ? 'border:1.5px solid var(--brand);background:var(--brand-lt)' : 'border:1px solid var(--n200);background:var(--n0)',
+        }));
+        startLabel = 'Start washing · ' + s.navCycle + ' min';
+      } else {
+        sheetManage = true;
+        const run = sm.status === 'inuse', done = sm.status === 'done';
+        if (run) {
+          sheetStatusLabel = 'In use';
+          sheetSub = 'Started ' + this.fmtAgo(sm.startTime) + ' · ' + this.fmtRemain(sm.endTime - now) + ' left';
+          if (sm.owner) { mSimulate = true; mExtend = true; manageAlertClass = 'alert alert-i'; manageNote = "This is your wash. We'll push you the moment it's done."; }
+          else { mMarkDone = true; manageAlertClass = 'alert alert-w'; manageNote = "In use by a neighbour. If it has stopped, mark it done — they'll get a push. Their identity stays hidden."; }
+        } else if (done) {
+          sheetStatusLabel = 'Done';
+          sheetSub = 'Finished ' + this.fmtAgo(sm.endTime);
+          mCollect = true; manageAlertClass = 'alert alert-s';
+          if (sm.owner) {
+            manageNote = 'Your laundry is ready. Collect it, then release the machine.';
+          } else {
+            mNotify = true;
+            manageNote = "Cycle's done but the clothes are still inside. Nudge the owner to come collect — or if you've emptied it yourself, release the machine.";
+          }
+        }
+      }
+    }
+
+    const notifList = s.notifs.map(n => ({ id: n.id, title: n.title, body: n.body, ago: this.fmtAgo(n.ts) }));
+
+    const cAct = 'var(--brand-tx)', cIdle = 'var(--n400)';
+    const bgAct = 'var(--brand-lt)', bgIdle = 'transparent';
+    // Button variant declarations — appended to a literal style base on each button
+    // (a fully-hole style attribute is dropped by the runtime, so we always keep a literal base).
+    const V_PRIMARY = 'border:0;background:linear-gradient(180deg,color-mix(in srgb,var(--brand) 90%,#fff) 0%,var(--brand) 100%);color:#fff;box-shadow:0 8px 22px rgba(61,86,54,0.28),inset 0 1px 0 rgba(255,255,255,0.22);pointer-events:auto';
+    const V_DISABLED = 'border:0;background:var(--n150);color:var(--n400);box-shadow:none;pointer-events:none;cursor:not-allowed';
+    const V_SECONDARY = 'border:1.5px solid var(--n200);background:var(--n0);color:var(--n800);box-shadow:none;pointer-events:auto';
+
+    return {
+      accent, statusInk: s.route === 'splash' || (s.route === 'app' && s.tab === 'home') ? '#ffffff' : 'var(--n800)',
+
+      isSplash: s.route === 'splash', isPhone: s.route === 'phone', isOtp: s.route === 'otp', isName: s.route === 'name', isApp: s.route === 'app',
+      tabHome: s.tab === 'home', tabMine: s.tab === 'mine', tabProfile: s.tab === 'profile',
+      goSplash: () => this.setState({ route: 'splash' }),
+      goPhone: () => this.setState({ route: 'phone' }),
+      submitPhone: () => { if (s.phone.length === 10) this.setState({ route: 'otp' }); },
+      submitOtp: () => { if (s.otp.join('').length === 4) this.setState({ route: 'name' }); },
+      submitName: () => { if (s.fullName.trim() && s.flat.trim()) this.setState({ route: 'app', tab: 'home' }); },
+      goHome: () => this.setState({ tab: 'home' }),
+      goMine: () => this.setState({ tab: 'mine' }),
+      goProfile: () => this.setState({ tab: 'profile' }),
+
+      phone: s.phone, onPhone: this.onPhone, phoneMasked,
+      phoneVar: s.phone.length === 10 ? V_PRIMARY : V_DISABLED,
+      otpBoxes: [0, 1, 2, 3].map(i => ({
+        value: s.otp[i] || '', onInput: (e) => this.setOtp(i, e), onKey: (e) => this.otpKey(i, e),
+        setRef: (el) => { this.otpEls[i] = el; },
+      })),
+      otpVar: s.otp.join('').length === 4 ? V_PRIMARY : V_DISABLED,
+      resend: this.resend,
+      fullName: s.fullName, onName: (e) => this.setState({ fullName: e.target.value }),
+      flat: s.flat, onFlat: (e) => this.setState({ flat: e.target.value }),
+      nameVar: (s.fullName.trim() && s.flat.trim()) ? V_PRIMARY : V_DISABLED,
+
+      firstName, initials, buildingName,
+      freeCount: free, busyCount: busy, doneCount: doneN,
+      machineCards,
+      openNotif: this.openNotif, unread: s.unread, unreadShow: s.unread > 0,
+      showInstall, dismissInstall: () => this.setState({ installDismissed: true }),
+
+      hasMine, noMine: !hasMine, mineCards, mineCountLabel, hasMineCount: mineCountLabel.length > 0,
+      mineDot: mineRunN > 0,
+
+      cHome: s.tab === 'home' ? cAct : cIdle, cMine: s.tab === 'mine' ? cAct : cIdle, cProfile: s.tab === 'profile' ? cAct : cIdle,
+      bgHome: s.tab === 'home' ? bgAct : bgIdle, bgMine: s.tab === 'mine' ? bgAct : bgIdle, bgProfile: s.tab === 'profile' ? bgAct : bgIdle,
+
+      logout: this.logout,
+      pushOn: s.pushOn, toggleNotif: () => this.setState(st => ({ pushOn: !st.pushOn })),
+      notifTrack: s.pushOn ? 'var(--brand)' : 'var(--n300)', notifJustify: s.pushOn ? 'flex-end' : 'flex-start',
+
+      sheetOpen, sheetBook, sheetManage, sheetMachineName, sheetSub, sheetStatusLabel, sheetPillStyle, sheetIcon, sheetIconWrap,
+      cycleOptions, cycleVal: s.navCycle, incCycle: this.incCycle, decCycle: this.decCycle, startLabel,
+      startMachine: this.startMachine, closeSheet: this.closeSheet,
+      manageNote, manageAlertClass, mMarkDone, mCollect, mSimulate, mExtend, mNotify,
+      pVar: V_PRIMARY,
+      collectVar: mNotify ? V_SECONDARY : V_PRIMARY,
+      doMarkDone: () => sh && this.complete(sh.id, true),
+      doCollect: () => sh && this.release(sh.id),
+      doNotifyCollect: () => sh && this.notifyCollect(sh.id),
+      doSimulate: () => sh && this.simulateEnd(sh.id),
+      shAdd5: () => sh && this.addTime(sh.id, 5), shAdd10: () => sh && this.addTime(sh.id, 10), shAdd15: () => sh && this.addTime(sh.id, 15),
+
+      notifOpen: s.notifOpen, closeNotif: this.closeNotif,
+      notifList, hasNotifs: notifList.length > 0, noNotifs: notifList.length === 0,
+
+      pushShow: !!s.push, pushTitle: s.push ? s.push.title : '', pushBody: s.push ? s.push.body : '', onPush: this.openNotif,
+      toastShow: !!s.toast, toastTitle: s.toast ? s.toast.t : '', toastBody: s.toast ? s.toast.b : '',
+
+    };
+  }
+}
+</script>
+</body>
+</html>

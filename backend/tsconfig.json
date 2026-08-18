@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    // DOM gives us the global fetch/Response/AbortSignal types the MSG91
+    // service uses; Node 18+ provides them at runtime.
+    "lib": ["ES2022", "DOM"],
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
+}

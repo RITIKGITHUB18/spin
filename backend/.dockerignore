@@ -1,0 +1,5 @@
+node_modules
+dist
+.mongo-data
+.env
+npm-debug.log*
