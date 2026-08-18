@@ -1,4 +1,4 @@
-const CACHE = 'spin-shell-v6';
+const CACHE = 'spin-shell-v7';
 const SHELL = [
   '/',
   '/offline.html',

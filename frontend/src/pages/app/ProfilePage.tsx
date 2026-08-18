@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useCallback, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { setPushOptIn } from '../../services/api/auth';
 import { disablePush, enablePush } from '../../services/push';
 import { useBookingHistory } from '../../hooks/useBookingHistory';
+import { PullToRefresh } from '../../components/common/PullToRefresh';
 import { MachineIcon } from '../../components/machines/MachineIcon';
 import { Spinner, LoadingBlock } from '../../components/common/Spinner';
 import { initialsOf, maskPhone } from '../../utils/initials';
@@ -17,6 +18,16 @@ export function ProfilePage() {
   const navigate = useNavigate();
   const { data: history, isLoading: historyLoading } = useBookingHistory();
   const [pushError, setPushError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  const refresh = useCallback(
+    () =>
+      Promise.all([
+        queryClient.refetchQueries({ queryKey: ['bookings'] }),
+        queryClient.refetchQueries({ queryKey: ['session'] }),
+      ]),
+    [queryClient]
+  );
 
   // The toggle reflects the stored preference rather than local state, so it
   // survives a reload. While the request is in flight it shows the value being
@@ -45,7 +56,7 @@ export function ProfilePage() {
   if (!user) return null;
 
   return (
-    <div className="scrollbar-none h-svh overflow-y-auto pb-24">
+    <PullToRefresh onRefresh={refresh} className="scrollbar-none h-full overflow-y-auto pb-24">
       <div className="px-5.5 pb-2 pt-13.5">
         <div className="font-serif text-[28px] text-cream-900">Profile</div>
       </div>
@@ -184,6 +195,6 @@ export function ProfilePage() {
         </button>
         <div className="mt-3.5 text-center font-mono text-[11px] text-cream-400">spin v1.0 · {user.buildingName}</div>
       </div>
-    </div>
+    </PullToRefresh>
   );
 }

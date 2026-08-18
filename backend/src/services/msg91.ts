@@ -155,15 +155,16 @@ export async function verifyAccessToken(accessToken: string): Promise<{ identifi
   }
 
   if (providerRejected) {
-    // MSG91 says "AuthenticationFailure" for both a bad Authkey and a spent
-    // access token, so the message alone cannot separate them — the numeric
-    // code does. Observed against the live endpoint with a known-good Authkey:
-    //   401 -> no/unusable credential reached MSG91 (our misconfiguration)
-    //   418 -> credential accepted, the access token is not usable
-    // Access tokens are single-use, so 418 is what a replayed or expired token
-    // produces. Treating that as a provider outage would tell the user to wait
-    // when what they actually need is a new code.
+    // Probed against the live endpoint (HTTP is always 200; the real status is
+    // in the body):
+    //   code 701, "invalid access-token"   -> credential fine, token is not
+    //   code 201, "AuthenticationFailure"  -> the AUTHKEY is wrong
+    // The distinction matters enormously: a wrong authkey used to fall through
+    // to OTP_TOKEN_INVALID, so a misconfigured server told every user their
+    // correct code was wrong, and gave the operator a 401 pointing at the
+    // token rather than at the credential.
     const code = String(json.code ?? '');
+    const authFailed = code === '201' || code === '401' || /authenticationfailure/i.test(providerMessage);
 
     if (/ipblock/i.test(providerMessage)) {
       console.error('[MSG91_VERIFY_ACCESS_TOKEN] MSG91 is rate-limiting this server IP.');
@@ -174,10 +175,12 @@ export async function verifyAccessToken(accessToken: string): Promise<{ identifi
       );
     }
 
-    if (code === '401') {
+    if (authFailed) {
       console.error(
-        '[MSG91_VERIFY_ACCESS_TOKEN] MSG91 did not accept our credential — check ' +
-          'MSG91_AUTH_KEY against the widget’s Server Side Integration page.'
+        '[MSG91_VERIFY_ACCESS_TOKEN] MSG91 rejected our AUTHKEY (not the user’s ' +
+          'code). Check MSG91_AUTH_KEY on this server against the widget’s ' +
+          'Server Side Integration page.',
+        { responseCode: code, responseMessage: providerMessage }
       );
       throw new AppError(
         503,

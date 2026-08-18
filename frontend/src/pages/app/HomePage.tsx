@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { useUiStore } from '../../store/uiStore';
 import { useMachines } from '../../hooks/useMachines';
@@ -5,6 +7,7 @@ import { useNotifications } from '../../hooks/useNotifications';
 import { useNow } from '../../hooks/useCountdown';
 import { useWeather } from '../../hooks/useWeather';
 import { MachineCard } from '../../components/machines/MachineCard';
+import { PullToRefresh } from '../../components/common/PullToRefresh';
 import { InstallBanner } from '../../components/common/InstallBanner';
 import { SkyBackdrop } from '../../components/common/SkyBackdrop';
 import { StatStrip } from '../../components/common/StatChip';
@@ -30,6 +33,17 @@ export function HomePage() {
   const { data: weather } = useWeather();
   const openNotif = useUiStore((s) => s.openNotif);
   const now = useNow();
+  const queryClient = useQueryClient();
+
+  // Pull refreshes exactly what this screen shows, nothing more.
+  const refresh = useCallback(
+    () =>
+      Promise.all([
+        queryClient.refetchQueries({ queryKey: ['machines'] }),
+        queryClient.refetchQueries({ queryKey: ['notifications'] }),
+      ]),
+    [queryClient]
+  );
 
   const free = machines?.filter((m) => m.status === 'available').length ?? 0;
   const busy = machines?.filter((m) => m.status === 'inuse').length ?? 0;
@@ -67,7 +81,7 @@ export function HomePage() {
     : 'border-white/20 bg-white/10';
 
   return (
-    <div className="scrollbar-none h-svh overflow-y-auto pb-24">
+    <PullToRefresh onRefresh={refresh} className="scrollbar-none h-full overflow-y-auto pb-24">
       <div className={`relative overflow-hidden rounded-b-[28px] px-5.5 pb-11 pt-12.5 ${headerText}`}>
         <SkyBackdrop
           phase={phase}
@@ -140,6 +154,6 @@ export function HomePage() {
         ))}
       </div>
 
-    </div>
+    </PullToRefresh>
   );
 }

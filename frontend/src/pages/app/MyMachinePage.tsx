@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from "react";
 import { useActiveBookings } from "../../hooks/useActiveBookings";
 import { useBookingActions } from "../../hooks/useBookingActions";
 import { useNow } from "../../hooks/useCountdown";
 import { CountdownRing } from "../../components/machines/CountdownRing";
+import { PullToRefresh } from '../../components/common/PullToRefresh';
 import { MachineIcon } from "../../components/machines/MachineIcon";
 import { LottiePlayer } from "../../components/common/LottiePlayer";
 import { PendingLabel } from "../../components/common/Spinner";
@@ -20,6 +22,12 @@ export function MyMachinePage() {
   const { data: bookings } = useActiveBookings();
   const { extend, collect, cancel, resume } = useBookingActions();
   const now = useNow();
+  const queryClient = useQueryClient();
+
+  const refresh = useCallback(
+    () => queryClient.refetchQueries({ queryKey: ['bookings'] }),
+    [queryClient]
+  );
 
   const running = bookings?.filter((b) => b.status === "inuse") ?? [];
   const doneList = bookings?.filter((b) => b.status === "done") ?? [];
@@ -42,7 +50,7 @@ export function MyMachinePage() {
     .join(" · ");
 
   return (
-    <div className="scrollbar-none h-svh overflow-y-auto pb-24">
+    <PullToRefresh onRefresh={refresh} className="scrollbar-none h-full overflow-y-auto pb-24">
       <div className="px-5.5 pb-2 pt-13.5">
         <div className="font-serif text-[28px] text-cream-900">My machines</div>
         {countLabel && (
@@ -271,6 +279,6 @@ export function MyMachinePage() {
           </Link>
         </div>
       )}
-    </div>
+    </PullToRefresh>
   );
 }

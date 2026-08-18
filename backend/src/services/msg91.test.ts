@@ -84,23 +84,24 @@ describe('verifyAccessToken', () => {
     });
   });
 
-  it('reports a missing credential (401) as a provider problem, not a bad OTP', async () => {
-    // Code 401 means MSG91 never accepted our credential; telling the user
+  it('reports a rejected authkey (201) as a provider problem, not a bad OTP', async () => {
+    // Code 201/AuthenticationFailure means MSG91 never accepted our credential;
+    // telling the user
     // their OTP was wrong would send them round a loop they cannot fix.
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(jsonResponse({ type: 'error', message: 'AuthenticationFailure', code: 401 }))
+      vi.fn().mockResolvedValue(jsonResponse({ type: 'error', message: 'AuthenticationFailure', code: 201 }))
     );
     await expect(verifyAccessToken('tok_abcdefghijklmnop')).rejects.toMatchObject({
       code: 'OTP_PROVIDER_UNAVAILABLE',
     });
   });
 
-  it('reports a spent/expired token (418) as OTP_TOKEN_INVALID', async () => {
+  it('reports a spent/expired token (701) as OTP_TOKEN_INVALID', async () => {
     // Access tokens are single use — a replayed one must ask for a new code.
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(jsonResponse({ type: 'error', message: 'AuthenticationFailure', code: '418' }))
+      vi.fn().mockResolvedValue(jsonResponse({ type: 'error', message: 'invalid access-token', code: 701 }))
     );
     await expect(verifyAccessToken('tok_abcdefghijklmnop')).rejects.toMatchObject({
       code: 'OTP_TOKEN_INVALID',

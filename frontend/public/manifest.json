@@ -3,7 +3,7 @@
   "short_name": "spin",
   "description": "Your building's laundry room, finally drama-free.",
   "theme_color": "#000000",
-  "background_color": "#FFFFFF",
+  "background_color": "#000000",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "/",

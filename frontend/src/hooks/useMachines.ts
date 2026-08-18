@@ -2,20 +2,19 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchMachines } from '../services/api/machines';
 
 /**
- * `staleTime` matters as much as the interval here. Without it the data is
- * stale the instant it lands, so every new observer refetches on mount — and
- * the pages mount and unmount on each tab switch, so moving between Home, My
- * machines and Profile fired a fresh request every time.
+ * No interval. Machine status only changes when a person acts on a machine, so
+ * a timer spent most of its requests confirming nothing had happened.
  *
- * Booking actions invalidate ['machines'] directly, so a change you make is
- * reflected immediately regardless of the interval; the poll only exists to
- * pick up what *other* residents do.
+ * It stays current through three cheaper signals: booking actions invalidate
+ * ['machines'] directly, React Query refetches on window focus once the data is
+ * stale, and the user can pull to refresh. `staleTime` is what stops a tab
+ * switch refiring the request — every new observer refetches on mount while the
+ * data is considered stale.
  */
 export function useMachines() {
   return useQuery({
     queryKey: ['machines'],
     queryFn: fetchMachines,
-    refetchInterval: 15000,
-    staleTime: 10000,
+    staleTime: 30000,
   });
 }

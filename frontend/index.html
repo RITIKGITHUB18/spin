@@ -8,16 +8,65 @@
     <meta name="theme-color" content="#000000" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
-    <!-- iOS launch image. Note the rel is "apple-touch-startup-image"; the
-         "apple-startup-image" spelling in the asset README is not a real rel
-         and is ignored. iOS also matches these by device media query, so this
-         single 1080x1920 file only applies to devices of that logical size. -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="apple-touch-startup-image" href="/icons/splash-dark-1080x1920.png" />
+    <!-- iOS picks a startup image by exact device media query; a single
+         unsized link is ignored, which is why the earlier one never showed. -->
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-15promax.png"
+          media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-14pro.png"
+          media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-14plus.png"
+          media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-14.png"
+          media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-11promax.png"
+          media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-11.png"
+          media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-x.png"
+          media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/icons/splash/iphone-8.png"
+          media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
     <title>spin — laundry, sorted</title>
+    <style>
+      /* Boot splash. Inlined — no stylesheet, no script, no network request —
+         so it paints on the browser's first pass through this file. Anything
+         external here would defeat the point: the whole job is to cover the
+         gap before the JS bundle has even been fetched. */
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 26px;
+        background: #000;
+        transition: opacity 260ms ease;
+      }
+      #boot img { width: 84px; height: 84px; display: block; }
+      #boot .wm {
+        font: 600 22px/1 system-ui, "Segoe UI", Roboto, sans-serif;
+        letter-spacing: 0.42em;
+        text-indent: 0.42em;
+        color: #fff;
+      }
+      #boot .tag {
+        margin-top: -14px;
+        font: 400 13px/1 system-ui, "Segoe UI", Roboto, sans-serif;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      /* Set by main.tsx once React has painted. */
+      #boot.done { opacity: 0; pointer-events: none; }
+      @media (prefers-reduced-motion: reduce) { #boot { transition: none; } }
+    </style>
   </head>
   <body>
+    <div id="boot">
+      <img src="data:image/png;base64,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" alt="" width="84" height="84" />
+      <div class="wm">SPIN</div>
+      <div class="tag">laundry, on schedule</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
