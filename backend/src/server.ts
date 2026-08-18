@@ -1,4 +1,10 @@
 import dotenv from "dotenv";
+
+// Load .env.<NODE_ENV> first, then .env as a fallback. dotenv never overwrites
+// a variable that is already set, so precedence runs: real environment
+// variables injected by the host > .env.production > .env. That lets one image
+// run in either environment without swapping files.
+dotenv.config({ path: `.env.${process.env.NODE_ENV || "development"}` });
 dotenv.config();
 
 import { createApp } from "./app";

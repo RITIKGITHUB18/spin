@@ -135,8 +135,14 @@ export async function verifyAccessToken(accessToken: string): Promise<{ identifi
 
   const providerMessage = typeof json.message === 'string' ? json.message : '[object]';
 
-  if (NODE_ENV !== 'production') {
-    // Secrets excluded by construction: no authkey, no full token.
+  const providerRejected = !res.ok || json.type === 'error';
+
+  // Always log a rejection, including in production. Without this a failed
+  // verify is a bare 401 with nothing on the server explaining why, which
+  // makes "spent token" and "wrong account credential" indistinguishable from
+  // the outside. Secrets are excluded by construction: no authkey, and the
+  // token is masked.
+  if (NODE_ENV !== 'production' || providerRejected) {
     console.error('[MSG91_VERIFY_ACCESS_TOKEN]', {
       endpoint: url,
       status: res.status,
@@ -148,7 +154,7 @@ export async function verifyAccessToken(accessToken: string): Promise<{ identifi
     });
   }
 
-  if (!res.ok || json.type === 'error') {
+  if (providerRejected) {
     // MSG91 says "AuthenticationFailure" for both a bad Authkey and a spent
     // access token, so the message alone cannot separate them — the numeric
     // code does. Observed against the live endpoint with a known-good Authkey:

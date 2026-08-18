@@ -1,10 +1,11 @@
-const CACHE = 'spin-shell-v4';
+const CACHE = 'spin-shell-v6';
 const SHELL = [
   '/',
   '/offline.html',
   '/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/icons/apple-touch-icon.png',
   // Precached so the first notification is audible immediately rather than
   // racing a cold fetch for the tone.
   '/sound/notify.mp3',
