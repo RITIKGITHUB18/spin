@@ -40,7 +40,7 @@ export function NamePage() {
   return (
     <div className="flex min-h-svh flex-col px-7.5 pb-7.5 pt-4.5">
       <div>
-        <div className="font-serif text-[34px] text-cream-900">Nice to meet you</div>
+        <div className="font-serif font-semibold text-[34px] text-cream-900">Nice to meet you</div>
         <div className="mt-2 text-[14.5px] text-cream-500">Just so your washes link to the right flat.</div>
       </div>
       <div className="mt-7 flex flex-col gap-4">
@@ -73,7 +73,7 @@ export function NamePage() {
         type="button"
         disabled={!valid || mutation.isPending}
         onClick={() => mutation.mutate()}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-bold text-white disabled:bg-cream-150 disabled:text-cream-400 bg-gradient-to-b from-brand-500 to-brand-600 shadow-lg disabled:shadow-none"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-semibold tracking-[1px] text-white disabled:bg-cream-150 disabled:text-cream-400 bg-gradient-to-b from-brand-500 to-brand-600 shadow-lg disabled:shadow-none"
       >
         {mutation.isPending ? (
           <>

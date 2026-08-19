@@ -1,8 +1,47 @@
 @import "tailwindcss";
 
+/* Termina — self-hosted from /public/fonts.
+ *
+ * Only the three weights the app actually renders are declared: 400 for body,
+ * 600 for font-semibold, 700 for font-bold. The family ships nine weights at
+ * ~54kB each, so declaring all of them would put ~486kB within reach of a
+ * first paint to serve two that are never used.
+ *
+ * font-display: swap — text paints immediately in the fallback and re-renders
+ * when Termina lands, rather than sitting invisible while 54kB downloads.
+ */
+@font-face {
+  font-family: "Termina";
+  src: url("/fonts/Termina-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Termina";
+  src: url("/fonts/Termina-Demi.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Termina";
+  src: url("/fonts/Termina-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  --font-display: "Georgia", serif;
-  --font-body: system-ui, "Segoe UI", Roboto, sans-serif;
+  /* One family across the app. --font-serif is overridden too: 14 places
+     already use `font-serif` for headings and the wordmark, so redefining the
+     token switches them all without touching a component. */
+  --font-display: "Termina", system-ui, sans-serif;
+  --font-body: "Termina", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Termina", system-ui, sans-serif;
+  /* Deliberately NOT Termina. This is used for countdown timers, run windows
+     and phone numbers, where proportional digits shift width as they tick and
+     the numbers visibly jitter. A monospace face keeps them still. */
   --font-mono: ui-monospace, Consolas, monospace;
 
   /* monochrome neutral scale — white is the base surface */
@@ -63,6 +102,16 @@
     /* overflow-x-hidden clips pages while they sit off-screen mid-transition */
     @apply bg-cream-50 text-cream-900 antialiased m-0 overflow-x-hidden;
     font-family: var(--font-body);
+  }
+
+  /* Form controls do NOT inherit font-family — every browser substitutes its
+     own UI font unless told otherwise. That is why typed input stayed on the
+     system face while the rest of the app moved to Termina. */
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
   }
 }
 

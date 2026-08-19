@@ -90,7 +90,7 @@ export function BookingSheet({ machine }: { machine: Machine }) {
         type="button"
         onClick={handleStart}
         disabled={start.isPending}
-        className="mt-4.5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-bold text-white shadow-lg disabled:opacity-60"
+        className="mt-4.5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
       >
         {start.isPending ? (
           <>

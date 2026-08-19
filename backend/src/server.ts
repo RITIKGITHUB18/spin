@@ -28,6 +28,17 @@ if (fs.existsSync(".env")) {
 const fingerprint = (v?: string): string =>
   v ? `${v.length}ch/${crypto.createHash("sha256").update(v).digest("hex").slice(0, 8)}` : "(unset)";
 
+// MSG91 configuration, reported without ever printing a credential. The
+// fingerprint is what lets local and production be compared: same key => same
+// 12 chars, and a mismatch is immediately visible.
+console.log("[boot] MSG91 configured", {
+  baseUrl: process.env.MSG91_BASE_URL || "https://control.msg91.com/api/v5/widget (default)",
+  widgetConfigured: Boolean(process.env.MSG91_WIDGET_ID && process.env.MSG91_TOKEN_AUTH),
+  authKeyFingerprint: process.env.MSG91_AUTH_KEY
+    ? crypto.createHash("sha256").update(process.env.MSG91_AUTH_KEY).digest("hex").slice(0, 12)
+    : "(UNSET)",
+});
+
 console.log("[boot] env", {
   NODE_ENV: mode,
   loadedFrom: loadedFrom.length ? loadedFrom : ["(none - using process env only)"],

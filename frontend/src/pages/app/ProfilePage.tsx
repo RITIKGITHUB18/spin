@@ -58,7 +58,7 @@ export function ProfilePage() {
   return (
     <PullToRefresh onRefresh={refresh} className="scrollbar-none h-full overflow-y-auto pb-24">
       <div className="px-5.5 pb-2 pt-13.5">
-        <div className="font-serif text-[28px] text-cream-900">Profile</div>
+        <div className="font-serif font-semibold text-[28px] text-cream-900">Profile</div>
       </div>
 
       <div className="flex items-center gap-4 px-5.5 py-2.5">
@@ -133,7 +133,7 @@ export function ProfilePage() {
       </div>
 
       <div className="px-5.5 pb-2 pt-6">
-        <span className="font-serif text-xl text-cream-900">Wash history</span>
+        <span className="font-serif font-semibold text-xl text-cream-900">Wash history</span>
       </div>
 
       <div className="flex flex-col gap-2.5 px-5.5">
@@ -184,7 +184,7 @@ export function ProfilePage() {
             logout();
             navigate('/');
           }}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-danger-bd bg-danger-bg py-3.5 text-sm font-bold text-danger-ic"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-danger-bd bg-danger-bg py-3.5 text-sm font-semibold tracking-[1px] text-danger-ic"
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3" />

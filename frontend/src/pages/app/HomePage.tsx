@@ -92,7 +92,7 @@ export function HomePage() {
           thunder={weatherCode !== undefined ? isThunder(weatherCode) : false}
         />
         <div className="relative z-10 flex items-center justify-between">
-          <span className="font-serif text-2xl italic">spin</span>
+          <span className="font-serif text-2xl font-bold italic">spin</span>
           <button
             type="button"
             onClick={openNotif}
@@ -110,7 +110,7 @@ export function HomePage() {
           </button>
         </div>
         <div className={`relative z-10 mt-4.5 text-sm ${headerMuted}`}>{greeting},</div>
-        <div className="relative z-10 mt-0.5 font-serif text-[30px] leading-tight">{firstNameOf(user?.fullName ?? '')}</div>
+        <div className="relative z-10 mt-0.5 font-serif font-semibold text-[30px] leading-tight">{firstNameOf(user?.fullName ?? '')}</div>
         <div className="relative z-10 mt-2.5 flex flex-wrap items-center gap-2">
           <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs ${headerChip}`}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -144,7 +144,7 @@ export function HomePage() {
       <InstallBanner />
 
       <div className="px-5.5 pb-2 pt-5">
-        <span className="font-serif text-xl text-cream-900">Laundry room</span>
+        <span className="font-serif font-semibold text-xl text-cream-900">Laundry room</span>
       </div>
 
       <div className="flex flex-col gap-3 px-5.5 pb-5.5">

@@ -39,7 +39,7 @@ export function PushBanner() {
             </div>
             <div className="min-w-0 flex-1 leading-tight">
               <div className="flex items-center gap-1.5">
-                <span className="font-serif text-[13px] italic text-cream-700">spin</span>
+                <span className="font-serif text-[13px] font-bold italic text-cream-700">spin</span>
                 <span className="text-[10px] text-cream-400">now</span>
               </div>
               <div className="mt-0.5 text-[13.5px] font-bold text-cream-900">{push.title}</div>

@@ -159,12 +159,19 @@ export async function verifyAccessToken(accessToken: string): Promise<{ identifi
     // in the body):
     //   code 701, "invalid access-token"   -> credential fine, token is not
     //   code 201, "AuthenticationFailure"  -> the AUTHKEY is wrong
+    //   code 418, "AuthenticationFailure"  -> the CALLER'S IP is not allowed
+    // 418 was observed from an AWS us-east-1 host using a key that returns 701
+    // from a whitelisted IP — same key, same body, different source address.
     // The distinction matters enormously: a wrong authkey used to fall through
     // to OTP_TOKEN_INVALID, so a misconfigured server told every user their
     // correct code was wrong, and gave the operator a 401 pointing at the
     // token rather than at the credential.
     const code = String(json.code ?? '');
-    const authFailed = code === '201' || code === '401' || /authenticationfailure/i.test(providerMessage);
+    const authFailed =
+      code === '201' ||
+      code === '401' ||
+      code === '418' ||
+      /authenticationfailure/i.test(providerMessage);
 
     if (/ipblock/i.test(providerMessage)) {
       console.error('[MSG91_VERIFY_ACCESS_TOKEN] MSG91 is rate-limiting this server IP.');
@@ -176,16 +183,23 @@ export async function verifyAccessToken(accessToken: string): Promise<{ identifi
     }
 
     if (authFailed) {
+      // Distinct from OTP_PROVIDER_UNAVAILABLE on purpose. "Unavailable" tells
+      // the user to try again, which is useless advice when the server's own
+      // credential or source IP is the problem — retrying cannot fix it, and
+      // the operator needs to see the difference in monitoring.
       console.error(
-        '[MSG91_VERIFY_ACCESS_TOKEN] MSG91 rejected our AUTHKEY (not the user’s ' +
-          'code). Check MSG91_AUTH_KEY on this server against the widget’s ' +
-          'Server Side Integration page.',
+        '[MSG91_VERIFY_ACCESS_TOKEN] MSG91 rejected OUR credential — this is a ' +
+          'server configuration problem, not a wrong OTP. Either MSG91_AUTH_KEY ' +
+          'is wrong for this account, or this server’s outbound IP is not ' +
+          'permitted by MSG91. Observed: code 418 accompanied a source-IP ' +
+          'rejection, code 201 a wrong key. Check the key on the widget’s ' +
+          'Server Side Integration page and the IP allow-list in MSG91.',
         { responseCode: code, responseMessage: providerMessage }
       );
       throw new AppError(
         503,
-        'OTP_PROVIDER_UNAVAILABLE',
-        'Unable to verify OTP right now. Please try again.'
+        'OTP_PROVIDER_AUTH_FAILURE',
+        'OTP service authentication failed'
       );
     }
 

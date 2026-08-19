@@ -10,6 +10,10 @@ beforeAll(() => {
     SUPABASE_URL: 'https://test.supabase.co',
     SUPABASE_SERVICE_ROLE_KEY: 'test-service-role',
     MSG91_AUTH_KEY: 'test-authkey',
+    // Required by the schema so a deployment cannot silently miss them.
+    // Never sent to verifyAccessToken — see the assertion on the request body.
+    MSG91_WIDGET_ID: 'test-widget-id',
+    MSG91_TOKEN_AUTH: 'test-token-auth',
     AUTH_PASSWORD_SECRET: '0123456789abcdef0123',
     NODE_ENV: 'test',
   });
@@ -93,7 +97,23 @@ describe('verifyAccessToken', () => {
       vi.fn().mockResolvedValue(jsonResponse({ type: 'error', message: 'AuthenticationFailure', code: 201 }))
     );
     await expect(verifyAccessToken('tok_abcdefghijklmnop')).rejects.toMatchObject({
-      code: 'OTP_PROVIDER_UNAVAILABLE',
+      status: 503,
+      code: 'OTP_PROVIDER_AUTH_FAILURE',
+    });
+  });
+
+  it('reports an IP/credential rejection (418) as OTP_PROVIDER_AUTH_FAILURE', async () => {
+    // Observed from an AWS host whose key returns 701 from a permitted IP.
+    // This must never surface as OTP_TOKEN_INVALID: the resident's code was
+    // fine, and telling them otherwise sends them round the retry loop while
+    // the real fault is server configuration.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(jsonResponse({ type: 'error', message: 'AuthenticationFailure', code: '418' }))
+    );
+    await expect(verifyAccessToken('tok_abcdefghijklmnop')).rejects.toMatchObject({
+      status: 503,
+      code: 'OTP_PROVIDER_AUTH_FAILURE',
     });
   });
 

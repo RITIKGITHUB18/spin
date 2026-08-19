@@ -24,8 +24,25 @@ const schema = z.object({
    * widget id and Token Auth are NOT here — they are public widget config and
    * belong to the frontend, which now runs send/retry/verify in the browser.
    */
+  /**
+   * The ONLY credential verifyAccessToken may use. MSG91 rejects the widget's
+   * tokenAuth here, and sending the widget id instead produces the same opaque
+   * AuthenticationFailure as a wrong key — so the two below are deliberately
+   * never passed to that endpoint.
+   */
   MSG91_AUTH_KEY: z.string().min(1, 'MSG91_AUTH_KEY is required'),
-  // Kept configurable so the widget host can be corrected without a code change.
+  /**
+   * Browser-side widget config. Not used by verifyAccessToken; required here
+   * only so a deployment missing them fails loudly at boot rather than at a
+   * resident's first sign-in, and so the boot line can report widget config.
+   */
+  MSG91_WIDGET_ID: z.string().min(1, 'MSG91_WIDGET_ID is required'),
+  MSG91_TOKEN_AUTH: z.string().min(1, 'MSG91_TOKEN_AUTH is required'),
+  /**
+   * Kept configurable so the widget host can be corrected without a code
+   * change. Defaulted rather than required: existing deployments do not set it,
+   * and making it mandatory would stop them booting on upgrade.
+   */
   MSG91_BASE_URL: z.string().url().default('https://control.msg91.com/api/v5/widget'),
 
   /**

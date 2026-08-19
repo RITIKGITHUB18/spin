@@ -94,7 +94,7 @@ export function ManageSheet({ machine }: { machine: Machine }) {
             type="button"
             onClick={() => resume.mutate(bookingId, { onSuccess: closeSheet })}
             disabled={resume.isPending}
-            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-bold text-white shadow-lg disabled:opacity-60"
+            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
           >
             <PendingLabel pending={resume.isPending}>Not done yet — resume timer</PendingLabel>
           </button>
@@ -104,7 +104,7 @@ export function ManageSheet({ machine }: { machine: Machine }) {
             type="button"
             onClick={() => cancel.mutate(bookingId, { onSuccess: closeSheet })}
             disabled={cancel.isPending}
-            className="w-full rounded-2xl border-[1.5px] border-cream-200 bg-white py-4 text-[15px] font-bold text-cream-800 disabled:opacity-60"
+            className="w-full rounded-2xl border-[1.5px] border-cream-200 bg-white py-4 text-[15px] font-semibold tracking-[1px] text-cream-800 disabled:opacity-60"
           >
             <PendingLabel pending={cancel.isPending}>Cancel wash &amp; release machine</PendingLabel>
           </button>
@@ -114,7 +114,7 @@ export function ManageSheet({ machine }: { machine: Machine }) {
             type="button"
             onClick={() => markDone.mutate(bookingId, { onSuccess: closeSheet })}
             disabled={markDone.isPending}
-            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-bold text-white shadow-lg disabled:opacity-60"
+            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
           >
             <PendingLabel pending={markDone.isPending}>Mark as done</PendingLabel>
           </button>
@@ -125,7 +125,7 @@ export function ManageSheet({ machine }: { machine: Machine }) {
               type="button"
               onClick={() => notifyCollect.mutate(bookingId, { onSuccess: closeSheet })}
               disabled={notifyCollect.isPending}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border-[1.5px] border-cream-200 bg-white py-4 text-[15px] font-bold text-cream-800 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border-[1.5px] border-cream-200 bg-white py-4 text-[15px] font-semibold tracking-[1px] text-cream-800 disabled:opacity-60"
             >
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -138,7 +138,7 @@ export function ManageSheet({ machine }: { machine: Machine }) {
               type="button"
               onClick={() => release.mutate(bookingId, { onSuccess: closeSheet })}
               disabled={release.isPending}
-              className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-bold text-white shadow-lg disabled:opacity-60"
+              className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
             >
               <PendingLabel pending={release.isPending}>I emptied it — release machine</PendingLabel>
             </button>
@@ -149,7 +149,7 @@ export function ManageSheet({ machine }: { machine: Machine }) {
             type="button"
             onClick={() => collect.mutate(bookingId, { onSuccess: closeSheet })}
             disabled={collect.isPending}
-            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-bold text-white shadow-lg disabled:opacity-60"
+            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
           >
             <PendingLabel pending={collect.isPending}>Confirm pickup &amp; release</PendingLabel>
           </button>

@@ -52,7 +52,7 @@ export function MyMachinePage() {
   return (
     <PullToRefresh onRefresh={refresh} className="scrollbar-none h-full overflow-y-auto pb-24">
       <div className="px-5.5 pb-2 pt-13.5">
-        <div className="font-serif text-[28px] text-cream-900">My machines</div>
+        <div className="font-serif font-semibold text-[28px] text-cream-900">My machines</div>
         {countLabel && (
           <div className="mt-0.5 text-[13px] text-cream-500">{countLabel}</div>
         )}
@@ -230,7 +230,7 @@ export function MyMachinePage() {
                           type="button"
                           onClick={() => resume.mutate(b.id)}
                           disabled={resume.isPending}
-                          className="w-full rounded-2xl bg-linear-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-bold text-white shadow-lg disabled:opacity-60"
+                          className="w-full rounded-2xl bg-linear-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
                         >
                           <PendingLabel pending={resume.isPending}>
                             Not done yet — resume timer
@@ -243,8 +243,8 @@ export function MyMachinePage() {
                         disabled={collect.isPending}
                         className={
                           notActuallyDone
-                            ? "w-full rounded-2xl border-[1.5px] border-cream-200 bg-white py-4 text-[15px] font-bold text-cream-800 disabled:opacity-60"
-                            : "w-full rounded-2xl bg-linear-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-bold text-white shadow-lg disabled:opacity-60"
+                            ? "w-full rounded-2xl border-[1.5px] border-cream-200 bg-white py-4 text-[15px] font-semibold tracking-[1px] text-cream-800 disabled:opacity-60"
+                            : "w-full rounded-2xl bg-linear-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
                         }
                       >
                         <PendingLabel pending={collect.isPending}>
@@ -273,7 +273,7 @@ export function MyMachinePage() {
           </div>
           <Link
             to="/app"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-500 px-5.5 py-3.5 text-[14.5px] font-bold text-white"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-500 px-5.5 py-3.5 text-[14.5px] font-semibold tracking-[1px] text-white"
           >
             Find a machine
           </Link>
