@@ -79,3 +79,11 @@ export function fmtRunWindow(startIso: string, endIso: string | null): string {
   const compactStart = end.endsWith(startMeridiem) ? start.slice(0, -3) : start;
   return `${compactStart} – ${end}`;
 }
+
+/** Minutes as a wash length: "45 min", "1 h 30 min", "2 h". */
+export function fmtDuration(total: number): string {
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  if (!h) return `${m} min`;
+  return m ? `${h} h ${m} min` : `${h} h`;
+}

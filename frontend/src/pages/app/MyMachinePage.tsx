@@ -21,6 +21,12 @@ const DOT_CLASS: Record<Booking["status"], string> = {
 export function MyMachinePage() {
   const { data: bookings } = useActiveBookings();
   const { extend, collect, cancel, resume } = useBookingActions();
+  // Only the tapped button spins. `extend` is ONE mutation shared by all three
+  // presets, so `extend.isPending` is true for every one of them at once and
+  // the spinner appeared in +5, +10 and +15 together. The in-flight variables
+  // say which was actually pressed. They stay disabled as a group, so a second
+  // extend cannot stack on top of the first.
+  const extendingMinutes = extend.isPending ? extend.variables?.minutes : null;
   const now = useNow();
   const queryClient = useQueryClient();
 
@@ -165,7 +171,7 @@ export function MyMachinePage() {
                             disabled={extend.isPending}
                             className="flex-1 rounded-[13px] border-[1.5px] border-cream-200 py-2.5 text-[13px] font-bold text-cream-800 disabled:opacity-60"
                           >
-                            <PendingLabel pending={extend.isPending} size={14}>
+                            <PendingLabel pending={extendingMinutes === m} size={14}>
                               +{m} min
                             </PendingLabel>
                           </button>
@@ -230,7 +236,8 @@ export function MyMachinePage() {
                           type="button"
                           onClick={() => resume.mutate(b.id)}
                           disabled={resume.isPending}
-                          className="w-full rounded-2xl bg-linear-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
+                          data-busy={resume.isPending || undefined}
+                          className="w-full rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
                         >
                           <PendingLabel pending={resume.isPending}>
                             Not done yet — resume timer
@@ -241,10 +248,11 @@ export function MyMachinePage() {
                         type="button"
                         onClick={() => collect.mutate(b.id)}
                         disabled={collect.isPending}
+                        data-busy={collect.isPending || undefined}
                         className={
                           notActuallyDone
                             ? "w-full rounded-2xl border-[1.5px] border-cream-200 bg-white py-4 text-[15px] font-semibold tracking-[1px] text-cream-800 disabled:opacity-60"
-                            : "w-full rounded-2xl bg-linear-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
+                            : "w-full rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
                         }
                       >
                         <PendingLabel pending={collect.isPending}>

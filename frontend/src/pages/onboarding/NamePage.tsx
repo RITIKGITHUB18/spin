@@ -73,7 +73,7 @@ export function NamePage() {
         type="button"
         disabled={!valid || mutation.isPending}
         onClick={() => mutation.mutate()}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-semibold tracking-[1px] text-white disabled:bg-cream-150 disabled:text-cream-400 bg-gradient-to-b from-brand-500 to-brand-600 shadow-lg disabled:shadow-none"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-semibold tracking-[1px] text-white disabled:bg-cream-150 disabled:text-cream-400 cta-surface"
       >
         {mutation.isPending ? (
           <>

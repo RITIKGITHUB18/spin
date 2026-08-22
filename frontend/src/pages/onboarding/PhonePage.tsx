@@ -40,6 +40,10 @@ export function PhonePage() {
         <div className="font-serif font-semibold text-[34px] text-cream-900">What's your number?</div>
         <div className="mt-2 max-w-[290px] text-[14.5px] text-cream-500">We'll text a one-time code to verify it's you.</div>
       </div>
+      {/* min-w-0 on the input: flex items default to min-width:auto, which
+          refuses to shrink below intrinsic content width — and an <input>
+          carries a default size of 20 characters. Without it, flex-1 cannot do
+          its job and the field overflows the page on narrow screens. */}
       <div className="mt-7.5 flex items-stretch gap-2.5">
         <div className="flex items-center rounded-[14px] border-[1.5px] border-cream-200 bg-white px-4 text-base font-bold text-cream-700">+91</div>
         <input
@@ -47,7 +51,7 @@ export function PhonePage() {
           onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 10))}
           inputMode="numeric"
           placeholder="98765 43210"
-          className="flex-1 rounded-[14px] border-[1.5px] border-cream-200 bg-white px-4 py-3.5 text-lg font-semibold tracking-[0.14em] text-cream-900 outline-none focus:border-brand-500"
+          className="min-w-0 flex-1 rounded-[14px] border-[1.5px] border-cream-200 bg-white px-4 py-3.5 font-mono text-lg font-semibold text-cream-900 outline-none focus:border-brand-500"
         />
       </div>
       <div className="flex-1" />
@@ -56,7 +60,7 @@ export function PhonePage() {
         type="button"
         disabled={!valid || mutation.isPending}
         onClick={() => mutation.mutate()}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-semibold tracking-[1px] text-white disabled:bg-cream-150 disabled:from-cream-150 disabled:to-cream-150 disabled:text-cream-400 bg-gradient-to-b from-brand-500 to-brand-600 shadow-lg disabled:shadow-none"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-semibold tracking-[1px] text-white disabled:bg-cream-150 disabled:text-cream-400 cta-surface"
       >
         {mutation.isPending ? (
           <>

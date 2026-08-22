@@ -14,6 +14,13 @@ import { isDbReachable } from "./config/db";
 export function createApp(): Express {
   const app = express();
 
+  // Exactly one proxy in front (nginx on the same host), so trust one hop. The
+  // rate limiter reads the client IP from X-Forwarded-For; without this it
+  // refuses to trust the header and buckets every request under nginx's own
+  // address, so one noisy client would rate-limit the whole building. `1`
+  // rather than `true`: trusting every hop lets a client spoof the header.
+  app.set('trust proxy', 1);
+
   app.use(helmet());
   // Explicit allow-list rather than `*`: these routes mint sessions. The list
   // comes from CORS_ORIGINS so the deployed domains and the local dev ports can

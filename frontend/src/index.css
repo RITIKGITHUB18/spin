@@ -1,48 +1,88 @@
 @import "tailwindcss";
 
-/* Termina — self-hosted from /public/fonts.
+/* Self-hosted from /public/fonts. Two families plus a mono:
+ *   Gilroy  — UI: body, inputs, CTAs
+ *   Denton  — display: page headings and the wordmark
+ *   Overpass Mono — timers, run windows, phone numbers
  *
- * Only the three weights the app actually renders are declared: 400 for body,
- * 600 for font-semibold, 700 for font-bold. The family ships nine weights at
- * ~54kB each, so declaring all of them would put ~486kB within reach of a
- * first paint to serve two that are never used.
- *
- * font-display: swap — text paints immediately in the fallback and re-renders
- * when Termina lands, rather than sitting invisible while 54kB downloads.
+ * Only the cuts the app renders are declared. Denton-Medium and
+ * Denton-BoldItalic ship as .woff because no .woff2 was supplied for them;
+ * they are ~50% larger than the rest as a result.
  */
 @font-face {
-  font-family: "Termina";
-  src: url("/fonts/Termina-Regular.woff2") format("woff2");
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Termina";
-  src: url("/fonts/Termina-Demi.woff2") format("woff2");
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Termina";
-  src: url("/fonts/Termina-Bold.woff2") format("woff2");
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Denton";
+  src: url("/fonts/Denton-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Declared at 600 because headings use font-semibold and Medium is the nearest
+   cut supplied. Declaring it truthfully as 500 would make the browser reach
+   past it to Bold for 600, which is heavier than the design calls for. */
+@font-face {
+  font-family: "Denton";
+  src: url("/fonts/Denton-Medium.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+/* A real italic — Termina had none, so the wordmark was a browser-synthesised
+   slant until now. */
+@font-face {
+  font-family: "Denton";
+  src: url("/fonts/Denton-BoldItalic.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Overpass Mono";
+  src: url("/fonts/overpass-mono-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Overpass Mono";
+  src: url("/fonts/overpass-mono-bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @theme {
-  /* One family across the app. --font-serif is overridden too: 14 places
-     already use `font-serif` for headings and the wordmark, so redefining the
-     token switches them all without touching a component. */
-  --font-display: "Termina", system-ui, sans-serif;
-  --font-body: "Termina", system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Termina", system-ui, sans-serif;
-  /* Deliberately NOT Termina. This is used for countdown timers, run windows
-     and phone numbers, where proportional digits shift width as they tick and
-     the numbers visibly jitter. A monospace face keeps them still. */
-  --font-mono: ui-monospace, Consolas, monospace;
+  /* `font-serif` is the display tier: every heading and the wordmark already
+     use it, so pointing the token at Denton switches them all without touching
+     a component. */
+  --font-display: "Denton", Georgia, serif;
+  --font-serif: "Denton", Georgia, serif;
+  --font-body: "Gilroy", system-ui, "Segoe UI", Roboto, sans-serif;
+  /* A genuine monospace at last. Termina had no tabular figures, so countdown
+     digits changed width as they ticked; these do not. */
+  --font-mono: "Overpass Mono", ui-monospace, Consolas, monospace;
 
   /* monochrome neutral scale — white is the base surface */
   --color-cream-0: #ffffff;
@@ -116,6 +156,66 @@
 }
 
 @layer utilities {
+  /* Primary CTA surface. Defined once because it repeats across 11 buttons —
+     inlining six long utilities at each would drift apart the moment one is
+     tweaked.
+     The gradient runs warm (top-left) through near-black to cool (bottom-right)
+     rather than a flat fill: at these sizes a single black reads as a hole in
+     the page, whereas the tonal shift gives the surface a direction. Both ends
+     are dark enough that the button still reads as black in the monochrome
+     palette. The rim and the inset top highlight are what make it look lit
+     rather than cut out. */
+  .cta-surface {
+    background-image: linear-gradient(135deg, #2f2427 0%, #0c0c0e 50%, #1d232c 100%);
+    /* Solid, NOT rgba white. A translucent border lets the gradient show
+       through itself, so the rim took the tone of whatever stop sat behind it
+       — measured at 21 points of luminance between the warm corner and the
+       centre, which reads as an uneven border. A fixed colour (the average of
+       that range) is identical on all four edges. Pills can stay translucent
+       because their fill is flat. */
+    border: 1px solid #464548;
+    /* Outer drop only. An `inset 0 1px 0` highlight used to sit here for a
+       glassy top edge, but it paints over the top border alone — so three
+       sides showed the border colour and the fourth showed the highlight,
+       which reads as an irregular border. A uniform rim beats a lit edge. */
+    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.55);
+  }
+  /* Disabled buttons keep their own flat background utility; clearing the
+     image is what lets it through, since the gradient would otherwise paint
+     over any background-color set alongside it. */
+  /* Flattened only when the button is genuinely unavailable — NOT while it is
+     merely busy. Stripping the gradient, border and shadow leaves white text on
+     a white sheet, so a CTA that disabled itself during its request appeared to
+     vanish mid-tap, taking its own spinner with it. A busy button still has to
+     look like a button; `data-busy` marks that case and keeps the surface. */
+  /* A CTA flush against a sheet's bottom edge has nowhere to cast: the sheet
+     ends ~12px below it and the nav bar clips the rest, so the shadow pools in
+     that strip as a smudge instead of reading as lift. Elsewhere -- full pages,
+     sheets with content below the button -- it still has room, so this is
+     scoped to the flush sheet rather than removed from .cta-surface. */
+  [data-flush] .cta-surface {
+    box-shadow: none;
+  }
+
+  .cta-surface:disabled:not([data-busy]) {
+    background-image: none;
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  /* Denton is the display tier, and 1px of tracking is part of how it is set
+     — so it lives with the family rather than being repeated at 14 call sites.
+     Doing it per-site would also invite the duplicate-utility trap: a second
+     `tracking-*` class on the same element is resolved by CSS order, not the
+     order it is written, so one silently loses.
+     Declared after Tailwind's own `.font-serif`, which sets only font-family,
+     so this adds to it rather than fighting it. Any element that genuinely
+     needs different tracking can still override with its own tracking-* class. */
+  .font-serif,
+  .font-display {
+    letter-spacing: 1px;
+  }
+
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }

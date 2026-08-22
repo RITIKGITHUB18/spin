@@ -90,7 +90,15 @@ let cached: Env | undefined;
 
 export function env(): Env {
   if (cached) return cached;
-  const parsed = schema.safeParse(process.env);
+  // `docker --env-file` keeps whitespace that dotenv strips, so a stray space
+  // after `=` reaches us intact and silently corrupts a key. Trim here, where
+  // every consumer benefits, rather than relying on each env file being clean.
+  const trimmed: Record<string, string | undefined> = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    trimmed[key] = typeof value === 'string' ? value.trim() : value;
+  }
+
+  const parsed = schema.safeParse(trimmed);
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `  - ${i.path.join('.')}: ${i.message}`).join('\n');
     throw new Error(`Invalid environment configuration:\n${issues}`);

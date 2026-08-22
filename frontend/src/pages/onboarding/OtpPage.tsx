@@ -106,7 +106,7 @@ export function OtpPage() {
             onKeyDown={(e) => handleKeyDown(i, e)}
             inputMode="numeric"
             maxLength={1}
-            className="h-17.5 w-15 rounded-2xl border-[1.5px] border-cream-200 bg-white text-center tracking-[0.06em] text-[28px] font-bold text-cream-900 outline-none focus:border-brand-500"
+            className="h-17.5 w-15 rounded-2xl border-[1.5px] border-cream-200 bg-white text-center font-mono text-[28px] font-bold text-cream-900 outline-none focus:border-brand-500"
           />
         ))}
       </div>
@@ -116,7 +116,7 @@ export function OtpPage() {
         type="button"
         disabled={!complete || mutation.isPending}
         onClick={() => mutation.mutate()}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-semibold tracking-[1px] text-white disabled:bg-cream-150 disabled:text-cream-400 bg-gradient-to-b from-brand-500 to-brand-600 shadow-lg disabled:shadow-none"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15.5px] font-semibold tracking-[1px] text-white disabled:bg-cream-150 disabled:text-cream-400 cta-surface"
       >
         {mutation.isPending ? (
           <>

@@ -1,20 +1,48 @@
 import { useEffect, useState } from 'react';
 import type { Machine } from '../../types';
+import { fmtDuration } from '../../utils/time';
 import { MachineIcon } from '../machines/MachineIcon';
 import { useBookingActions } from '../../hooks/useBookingActions';
 import { useUiStore } from '../../store/uiStore';
 import { Spinner } from '../common/Spinner';
+import { BottomSheet } from './BottomSheet';
+import { WheelPicker, WheelBand } from '../common/WheelPicker';
+import type { WheelOption } from '../common/WheelPicker';
+
+/**
+ * Duration is chosen as hours + minutes on two wheels. The backend accepts
+ * 5-180 minutes, so the ceiling here is 2h55 -- the largest value the two
+ * columns can express without a partly-disabled hour.
+ */
+const HOUR_OPTIONS: WheelOption<number>[] = [0, 1, 2].map((h) => ({ value: h, label: String(h) }));
+const MINUTE_STEP = 5;
+/** At zero hours the minutes cannot start at 00 -- a wash of no length. */
+function minuteOptions(hours: number): WheelOption<number>[] {
+  const first = hours === 0 ? MINUTE_STEP : 0;
+  const out: WheelOption<number>[] = [];
+  for (let m = first; m < 60; m += MINUTE_STEP) out.push({ value: m, label: String(m).padStart(2, '0') });
+  return out;
+}
+
+/** Wheels can express 0-2h55; the backend accepts 5-180. */
+function clampDuration(total: number): number {
+  const snapped = Math.round(total / MINUTE_STEP) * MINUTE_STEP;
+  return Math.max(MINUTE_STEP, Math.min(175, snapped));
+}
 
 export function BookingSheet({ machine }: { machine: Machine }) {
   const closeSheet = useUiStore((s) => s.closeSheet);
   const { start } = useBookingActions();
   const defaultProgram = machine.programs[1] ?? machine.programs[0];
   const [selected, setSelected] = useState(defaultProgram);
-  const [minutes, setMinutes] = useState(defaultProgram?.minutes ?? 45);
+  const [minutes, setMinutes] = useState(clampDuration(defaultProgram?.minutes ?? 45));
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const [durationOpen, setDurationOpen] = useState(false);
 
   useEffect(() => {
     setSelected(defaultProgram);
-    setMinutes(defaultProgram?.minutes ?? 45);
+    setMinutes(clampDuration(defaultProgram?.minutes ?? 45));
   }, [machine.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleStart() {
@@ -34,7 +62,7 @@ export function BookingSheet({ machine }: { machine: Machine }) {
           <div className="text-lg font-bold text-cream-900">{machine.name}</div>
           <div className="text-[13px] text-cream-500">{machine.model}</div>
         </div>
-        <span className="rounded-full bg-success-ic px-2.5 py-1.5 text-[11px] font-bold text-white">Free</span>
+        <span className="rounded-full border border-white/25 bg-success-ic px-2.5 py-1.5 text-[11px] font-semibold text-white">Free</span>
       </div>
 
       <span className="text-[11px] font-bold uppercase tracking-wide text-cream-500">Programs on this machine</span>
@@ -62,35 +90,31 @@ export function BookingSheet({ machine }: { machine: Machine }) {
         })}
       </div>
 
-      <div className="mt-4 flex items-center justify-between rounded-2xl border border-cream-150 bg-cream-50 px-3.5 py-3">
+      {/* Summary row, not the wheels themselves: the picker lives in its own
+          sheet so the booking sheet stays short enough to read at a glance. */}
+      <button
+        type="button"
+        onClick={() => setDurationOpen(true)}
+        className="mt-4 flex w-full items-center justify-between rounded-2xl border border-cream-150 bg-cream-50 px-3.5 py-3 text-left"
+      >
         <div>
           <div className="text-[11px] font-bold uppercase tracking-wide text-cream-500">Duration</div>
-          <div className="mt-0.5 text-xs text-cream-400">fine-tune the timer</div>
+          <div className="mt-0.5 text-xs text-cream-400">tap to fine-tune the timer</div>
         </div>
-        <div className="flex items-center gap-3.5">
-          <button
-            type="button"
-            onClick={() => setMinutes((m) => Math.max(15, m - 5))}
-            className="flex h-8.5 w-8.5 items-center justify-center rounded-[11px] border border-cream-200 bg-white text-lg text-cream-700"
-          >
-            −
-          </button>
-          <span className="min-w-16 text-center font-mono text-lg font-bold text-cream-900">{minutes} min</span>
-          <button
-            type="button"
-            onClick={() => setMinutes((m) => Math.min(120, m + 5))}
-            className="flex h-8.5 w-8.5 items-center justify-center rounded-[11px] border border-cream-200 bg-white text-lg text-cream-700"
-          >
-            +
-          </button>
+        <div className="flex items-center gap-1.5">
+          <span className="font-mono text-lg font-bold text-cream-900">{fmtDuration(minutes)}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-cream-400">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
         </div>
-      </div>
+      </button>
 
       <button
         type="button"
         onClick={handleStart}
         disabled={start.isPending}
-        className="mt-4.5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
+        data-busy={start.isPending || undefined}
+        className="mt-4.5 flex w-full items-center justify-center gap-2 rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
       >
         {start.isPending ? (
           <>
@@ -98,7 +122,7 @@ export function BookingSheet({ machine }: { machine: Machine }) {
             <Spinner size={18} />
           </>
         ) : (
-          `Start washing · ${minutes} min`
+          `Start washing · ${fmtDuration(minutes)}`
         )}
       </button>
       <div className="mt-3 flex items-center justify-center gap-1.5 text-[11.5px] text-cream-400">
@@ -108,6 +132,43 @@ export function BookingSheet({ machine }: { machine: Machine }) {
         </svg>
         Linked to you privately — others just see "in use".
       </div>
+
+      {/* Stacked over the booking sheet rather than replacing it, so the
+          machine and programme stay visible behind and the choice keeps its
+          context. Changes commit as they are made -- dismissing by swipe or
+          backdrop is a normal way out of a sheet, and it must not silently
+          throw the selection away. */}
+      <BottomSheet open={durationOpen} onClose={() => setDurationOpen(false)} layer={1} flush>
+        <div className="text-center">
+          <div className="text-lg font-bold text-cream-900">Wash duration</div>
+          <div className="mt-0.5 text-xs text-cream-400">How long is this cycle?</div>
+        </div>
+        <div className="mt-3">
+          <WheelBand>
+            <WheelPicker
+              label="Hours"
+              options={HOUR_OPTIONS}
+              value={hours}
+              onChange={(h) => setMinutes(clampDuration(h * 60 + mins))}
+              suffix="h"
+            />
+            <WheelPicker
+              label="Minutes"
+              options={minuteOptions(hours)}
+              value={mins}
+              onChange={(m) => setMinutes(clampDuration(hours * 60 + m))}
+              suffix="min"
+            />
+          </WheelBand>
+        </div>
+        <button
+          type="button"
+          onClick={() => setDurationOpen(false)}
+          className="mt-4 w-full rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
+        >
+          Done · {fmtDuration(minutes)}
+        </button>
+      </BottomSheet>
     </div>
   );
 }

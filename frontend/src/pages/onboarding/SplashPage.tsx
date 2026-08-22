@@ -172,7 +172,7 @@ export function SplashPage() {
       <div className="relative z-10 flex flex-col gap-3.5">
         <Link
           to="/phone"
-          className="flex w-full items-center justify-center gap-2 rounded-[18px] bg-gradient-to-b from-brand-500 to-brand-600 py-4.5 text-[16.5px] font-semibold tracking-[1px] text-white shadow-lg"
+          className="flex w-full items-center justify-center gap-2 rounded-[18px] cta-surface py-4.5 text-[16.5px] font-semibold tracking-[1px] text-white"
         >
           Get started
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

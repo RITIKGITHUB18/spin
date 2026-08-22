@@ -53,8 +53,12 @@ export function MachineCard({ machine, now }: { machine: Machine; now: number })
       onClick={() => openSheet(machine.status === 'available' ? 'book' : 'manage', machine.id)}
       className={`flex w-full items-center gap-3.5 rounded-[20px] p-4 text-left active:scale-[0.985] transition-transform ${CARD_CLASS[machine.status]}`}
     >
-      <div className={`flex h-[54px] w-[54px] flex-none items-center justify-center rounded-2xl ${ICON_WRAP_CLASS[machine.status]}`}>
-        <MachineIcon name={machine.status === 'inuse' ? 'drum' : machine.kind} spin={machine.status === 'inuse'} />
+      {/* Inset rather than filling the tile: at 54px the machine needs air
+          around it or it reads as a smudge. alt is empty because the machine's
+          name sits right beside it — announcing "washing machine" here would
+          just repeat it. */}
+      <div className={`flex h-[54px] w-[54px] flex-none items-center justify-center overflow-hidden rounded-2xl ${ICON_WRAP_CLASS[machine.status]}`}>
+        <img src="/img/washer.png" alt="" className="h-[86%] w-auto object-contain" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
@@ -66,11 +70,15 @@ export function MachineCard({ machine, now }: { machine: Machine; now: number })
         <div className="mt-0.5 text-[12.5px] text-cream-500">{sub}</div>
       </div>
       <div className="flex flex-none flex-col items-end gap-1.5">
-        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white ${PILL_CLASS[machine.status]}`}>
-          {pillIcon === 'check' && <MachineIcon name="check" size={12} />}
-          {pillIcon === 'bell' && <MachineIcon name="bell" size={12} />}
+        {/* The glyph is deliberately small with a heavy stroke: at 12px and the
+            default hairline it read as a different weight to the label beside
+            it, so the two looked stuck together rather than designed. 600
+            rather than 700 for the same reason — Bold at 11px is a slab. */}
+        <span className={`inline-flex items-center gap-1.25 rounded-full border border-white/25 px-2.25 py-0.75 text-[11px] font-semibold text-white ${PILL_CLASS[machine.status]}`}>
+          {pillIcon === 'check' && <MachineIcon name="check" size={10} strokeWidth={2.6} />}
+          {pillIcon === 'bell' && <MachineIcon name="bell" size={10} strokeWidth={2.2} />}
           {pillIcon === 'clock' && (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" />
               <path d="M12 8v4l2.5 1.5" />
             </svg>

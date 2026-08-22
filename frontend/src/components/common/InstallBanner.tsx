@@ -43,7 +43,7 @@ export function InstallBanner() {
           <button
             type="button"
             onClick={() => void promptInstall()}
-            className="flex-none whitespace-nowrap rounded-full bg-brand-500 px-3.5 py-1.5 text-[13px] font-bold text-white"
+            className="cta-surface flex-none whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-semibold tracking-[1px] text-white"
           >
             Add to Home
           </button>

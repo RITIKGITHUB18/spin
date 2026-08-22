@@ -20,6 +20,9 @@ export function ManageSheet({ machine }: { machine: Machine }) {
   const now = useNow();
   const closeSheet = useUiStore((s) => s.closeSheet);
   const { extend, markDone, notifyCollect, collect, release, cancel, resume } = useBookingActions();
+  // Same shared-mutation trap as My machines: without this every preset spins
+  // when one is pressed.
+  const extendingMinutes = extend.isPending ? extend.variables?.minutes : null;
   const bookingId = machine.bookingId!;
   const running = machine.status === 'inuse';
   const done = machine.status === 'done';
@@ -81,7 +84,7 @@ export function ManageSheet({ machine }: { machine: Machine }) {
                 disabled={extend.isPending}
                 className="flex-1 rounded-[13px] border-[1.5px] border-cream-200 bg-white py-2.5 text-[13px] font-bold text-cream-800 disabled:opacity-60"
               >
-                <PendingLabel pending={extend.isPending} size={14}>+{m} min</PendingLabel>
+                <PendingLabel pending={extendingMinutes === m} size={14}>+{m} min</PendingLabel>
               </button>
             ))}
           </div>
@@ -94,7 +97,8 @@ export function ManageSheet({ machine }: { machine: Machine }) {
             type="button"
             onClick={() => resume.mutate(bookingId, { onSuccess: closeSheet })}
             disabled={resume.isPending}
-            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
+            data-busy={resume.isPending || undefined}
+            className="w-full rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
           >
             <PendingLabel pending={resume.isPending}>Not done yet — resume timer</PendingLabel>
           </button>
@@ -114,7 +118,8 @@ export function ManageSheet({ machine }: { machine: Machine }) {
             type="button"
             onClick={() => markDone.mutate(bookingId, { onSuccess: closeSheet })}
             disabled={markDone.isPending}
-            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
+            data-busy={markDone.isPending || undefined}
+            className="w-full rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
           >
             <PendingLabel pending={markDone.isPending}>Mark as done</PendingLabel>
           </button>
@@ -138,7 +143,8 @@ export function ManageSheet({ machine }: { machine: Machine }) {
               type="button"
               onClick={() => release.mutate(bookingId, { onSuccess: closeSheet })}
               disabled={release.isPending}
-              className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
+              data-busy={release.isPending || undefined}
+              className="w-full rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
             >
               <PendingLabel pending={release.isPending}>I emptied it — release machine</PendingLabel>
             </button>
@@ -149,7 +155,8 @@ export function ManageSheet({ machine }: { machine: Machine }) {
             type="button"
             onClick={() => collect.mutate(bookingId, { onSuccess: closeSheet })}
             disabled={collect.isPending}
-            className="w-full rounded-2xl bg-gradient-to-b from-brand-500 to-brand-600 py-4 text-[15.5px] font-semibold tracking-[1px] text-white shadow-lg disabled:opacity-60"
+            data-busy={collect.isPending || undefined}
+            className="w-full rounded-2xl cta-surface py-4 text-[15.5px] font-semibold tracking-[1px] text-white"
           >
             <PendingLabel pending={collect.isPending}>Confirm pickup &amp; release</PendingLabel>
           </button>

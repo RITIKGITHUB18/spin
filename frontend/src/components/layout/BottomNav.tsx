@@ -1,39 +1,32 @@
 import { memo, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 
-function HomeIcon() {
+/**
+ * 3D renders rather than stroke icons, with a separate cut per state. They
+ * arrived as opaque-white PNGs, so the white ground was flood-filled to
+ * transparency — dropped in as supplied they would have been white squares on
+ * this black bar.
+ */
+function NavIcon({ name, active }: { name: 'home' | 'machine' | 'profile'; active: boolean }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 10.5 12 3l9 7.5" />
-      <path d="M5 9.5V21h14V9.5" />
-      <path d="M10 21v-6h4v6" />
-    </svg>
-  );
-}
-function DrumIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" />
-      <path d="M12 3v3.2" />
-      <path d="M9.3 11a1 1 0 1 0 2 0 1 1 0 1 0-2 0" />
-      <path d="M12.5 13.6a1 1 0 1 0 2 0 1 1 0 1 0-2 0" />
-    </svg>
-  );
-}
-function ProfileIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1" />
-      <path d="M8 7a4 4 0 1 0 8 0 4 4 0 1 0-8 0" />
-    </svg>
+    <img
+      src={`/img/nav/${name}-${active ? 'active' : 'inactive'}.png`}
+      alt=""
+      width={26}
+      height={26}
+      // The art is light grey and cannot carry a colour change, so the states
+      // are told apart by brightness instead: full strength when active,
+      // dimmed when not.
+      className={`block h-[26px] w-[26px] object-contain ${active ? 'opacity-100' : 'opacity-45'}`}
+    />
   );
 }
 
 const TABS = [
-  { to: '/app', label: 'Home', icon: HomeIcon, end: true },
-  { to: '/app/mine', label: 'My machine', icon: DrumIcon, end: false },
-  { to: '/app/profile', label: 'Profile', icon: ProfileIcon, end: false },
-];
+  { to: '/app', label: 'Home', icon: 'home', end: true },
+  { to: '/app/mine', label: 'My machine', icon: 'machine', end: false },
+  { to: '/app/profile', label: 'Profile', icon: 'profile', end: false },
+] as const;
 
 /**
  * Memoised so the bar itself stays put while navigating. AppShell re-renders on
@@ -102,7 +95,7 @@ export const BottomNav = memo(function BottomNav({
           paddingBottom: 'max(0.875rem, env(safe-area-inset-bottom))',
         }}
       >
-      {TABS.map(({ to, label, icon: Icon, end }) => (
+      {TABS.map(({ to, label, icon, end }) => (
           <NavLink
             key={to}
             to={{ pathname: to, search }}
@@ -112,18 +105,28 @@ export const BottomNav = memo(function BottomNav({
           {({ isActive }) => (
             <span
               className={`flex flex-col items-center gap-0.5 rounded-2xl px-4 py-1.5 ${
-                // Inverted for the dark bar: cream-500 only reaches 4.0:1 on
-                // black, cream-400 clears AA at ~7:1.
-                isActive ? 'bg-brand-lt text-brand-tx' : 'text-cream-400'
+                // No pill behind the active tab. The icons are light grey, so
+                // the old light #f0f0f0 pill hid the active one entirely; a
+                // dark pill worked but crowded three 3D renders into small
+                // boxes. Brightness carries the state instead — full-strength
+                // icon and a white label against a dimmed 45% icon and
+                // cream-400, which still clears AA at ~7:1 on black.
+                // The padding stays: it is the tap target, not decoration.
+                isActive ? 'text-white' : 'text-cream-400'
               }`}
             >
               <span className="relative">
-                <Icon />
+                <NavIcon name={icon} active={isActive} />
                 {label === 'My machine' && mineDot && (
                   <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-cream-900 bg-white" />
                 )}
               </span>
-              <span className="text-[10.5px] font-bold">{label}</span>
+              {/* 0.7px, not the 1px used on CTAs: that is 0.065em at their 15.5px, and
+                  the same ratio at 10.5px is 0.7px. Copying the absolute value
+                  would space these labels half again as wide as the buttons.
+                  nowrap because "My machine" is the long one and a wrap here
+                  would push the bar taller. */}
+              <span className="whitespace-nowrap text-[10.5px] font-bold tracking-[0.7px]">{label}</span>
             </span>
           )}
           </NavLink>

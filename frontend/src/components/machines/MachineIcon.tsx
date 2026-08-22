@@ -10,11 +10,15 @@ export function MachineIcon({
   name,
   size = 26,
   spin = false,
+  strokeWidth,
   className,
 }: {
   name: keyof typeof PATHS;
   size?: number;
   spin?: boolean;
+  /** Override the size-derived default. A hairline stroke next to bold text
+   *  reads as a different weight class and makes the pair look unrelated. */
+  strokeWidth?: number;
   className?: string;
 }) {
   return (
@@ -24,7 +28,7 @@ export function MachineIcon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={size >= 24 ? 1.5 : 1.65}
+      strokeWidth={strokeWidth ?? (size >= 24 ? 1.5 : 1.65)}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={`block ${spin ? 'animate-drum-spin' : ''} ${className ?? ''}`}
